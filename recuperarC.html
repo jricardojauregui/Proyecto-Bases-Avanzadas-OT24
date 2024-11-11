@@ -1,0 +1,25 @@
+//recuperarCuenta
+
+<!DOCTYPE html>
+<html>
+ <head>
+ <title>Acceso</title>
+ <link rel="stylesheet" href="{{url_for('static',filename='css/estilo.css')}}"/>
+</head>
+<body>
+    <form action="/protocoloRecuperacion" method="POST">
+        <!--inicio de menu-->
+<ul>
+  <li><a href="/">Inicio</a></li>
+  <li><a href="/LOGIN">Atras</a></li>
+</ul>
+
+        <!--inicio de formulario login-->
+    <h2>Recuperar Cuenta</h2>
+    <form action="/protocoloRecuperacion" method="POST">
+        <label for="mail">Correo:</label>
+        <input type="email" id="mail" name="mail" required>
+        <button type="submit">Enviar</button>
+
+</body>
+</html>

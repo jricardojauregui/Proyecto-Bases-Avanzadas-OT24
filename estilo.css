@@ -1,0 +1,177 @@
+/* Estilos básicos para cuerpo de la página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilos de encabezado */
+h1, h2, h3 {
+    color: #333;
+    text-align: center;
+    margin: 10px 0;
+}
+
+/* Estilos de párrafo */
+p {
+    line-height: 1.6;
+    margin: 10px;
+}
+
+/* Estilos de enlace */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #0056b3;
+}
+
+/* Estilos de botón */
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos de contenedor */
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Estilos para una lista */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    padding: 5px 0;
+}
+
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Menú principal */
+.menu-principal {
+    background-color: #333;
+}
+
+.menu-principal ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.menu-principal ul li {
+    position: relative;
+}
+
+.menu-principal ul li a {
+    display: block;
+    color: white;
+    padding: 15px 20px;
+    text-decoration: none;
+}
+
+.menu-principal ul li a:hover {
+    background-color: #555;
+}
+
+/* Dropdown Button */
+.dropbtn {
+  background-color: #3498DB;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #2980B9;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
+
+/* Ajusta el ancho de todas las imágenes */
+img {
+    width: 50%; /* El tamaño será el 50% del ancho de su contenedor */
+    height: auto; /* Mantiene la proporción de la imagen */
+}
+
+.buscador {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.buscador input[type="search"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+    width: 250px;
+}
+
+.buscador button {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-left: none;
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+    border-radius: 0 4px 4px 0;
+}
+
+.buscador button:hover {
+    background-color: #555;
+}
