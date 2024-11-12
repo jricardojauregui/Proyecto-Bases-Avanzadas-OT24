@@ -2,6 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
 from database import mysql, init_app
 
+from controllers.adminController import loginAdmin, registerAdmin, logoutAdmin, mostrarEmpresas, editarEmpresas, eliminarEmpresas
+from controllers.empresasController import loginEmp, registerEmp, logoutEmp, editarEmp
+from controllers.usuarioController import loginU, registerU, logoutU, compra
+
 app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = MYSQL_HOST
