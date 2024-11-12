@@ -29,7 +29,7 @@ app.add_url_rule('/eliminarEmpresas/<int:id>', view_func=eliminarEmpresas, metho
 app.add_url_rule('/loginEmp', view_func=loginEmp, methods=['GET', 'POST'])
 app.add_url_rule('/registrarEmp', view_func=registerEmp, methods=['GET', 'POST'])
 app.add_url_rule('/logoutEmp', view_func=logoutEmp)
-app.add_url_rule('/editarEmp/<int:id>', view_func=editarEmp, methods=['GET', 'POST'])
+app.add_url_rule('/editarEmp', view_func=editarEmp, methods=['GET', 'POST'])
 
 ### RUTAS USUARIO
 app.add_url_rule('/login', view_func=loginU, methods=['GET', 'POST'])
