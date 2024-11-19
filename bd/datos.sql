@@ -1,25 +1,35 @@
-INSERT INTO usuarios (nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion)
+INSERT INTO usuarios (clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion)
 VALUES 
-('Juan', 'Pérez', 'juan.perez@gmail.com', '1234567890', '0987654321', 'Calle 123, Monterrey'),
-('María', 'González', 'maria.gonzalez@hotmail.com', '2233445566', '6655443322', 'Calle 456, Guadalajara'),
-('Carlos', 'López', 'carlos.lopez@outlook.com', '9988776655', '5566778899', 'Calle 789, CDMX'),
-('Ana', 'Martínez', 'ana.martinez@gmail.com', '1122334455', '5544332211', 'Calle 321, Puebla'),
-('Luis', 'Ramírez', 'luis.ramirez@yahoo.com', '4433221100', '1100223344', 'Calle 654, León'),
-('Elena', 'Sánchez', 'elena.sanchez@hotmail.com', '6677889900', '0099887766', 'Calle 987, Querétaro'),
-('Pablo', 'Hernández', 'pablo.hernandez@gmail.com', '9988772233', '2233441122', 'Calle 852, Mérida'),
-('Lucía', 'Castro', 'lucia.castro@outlook.com', '3344556677', '7766554433', 'Calle 741, Cancún'),
-('Diego', 'Morales', 'diego.morales@gmail.com', '5566778899', '9988776655', 'Calle 963, Tijuana'),
-('Fernanda', 'Ortega', 'fernanda.ortega@yahoo.com', '6655443322', '2233445566', 'Calle 159, Saltillo'),
-('Gabriel', 'Núñez', 'gabriel.nunez@outlook.com', '1122334455', '5544332211', 'Calle 753, Oaxaca'),
-('Paola', 'Mendoza', 'paola.mendoza@gmail.com', '4433221100', '1100223344', 'Calle 951, Veracruz'),
-('Manuel', 'Reyes', 'manuel.reyes@hotmail.com', '3344556677', '7766554433', 'Calle 951, Chihuahua'),
-('Alejandra', 'Vega', 'alejandra.vega@outlook.com', '5566778899', '2233441122', 'Calle 753, Mexicali'),
-('Sofía', 'Torres', 'sofia.torres@gmail.com', '2233445566', '6655443322', 'Calle 741, Aguascalientes'),
-('Sebastián', 'Flores', 'sebastian.flores@hotmail.com', '1122334455', '5544332211', 'Calle 852, Morelia'),
-('Isabel', 'Cruz', 'isabel.cruz@outlook.com', '4433221100', '1100223344', 'Calle 963, Ensenada'),
-('Daniel', 'Vargas', 'daniel.vargas@gmail.com', '3344556677', '7766554433', 'Calle 159, Zacatecas'),
-('Andrea', 'Ríos', 'andrea.rios@hotmail.com', '5566778899', '2233441122', 'Calle 951, Villahermosa'),
-('Miguel', 'Estrada', 'miguel.estrada@gmail.com', '9988776655', '6655443322', 'Calle 753, San Luis Potosí');
+('clave123!', 'Juan', 'Pérez', 'juan.perez@gmail.com', '1234567890', '0987654321', 'Calle 123, Monterrey'),
+('maria456$', 'María', 'González', 'maria.gonzalez@hotmail.com', '2233445567', '6655443328', 'Calle 456, Guadalajara'),
+('carlos789#', 'Carlos', 'López', 'carlos.lopez@outlook.com', '9988776659', '5566778891', 'Calle 789, CDMX'),
+('ana654$', 'Ana', 'Martínez', 'ana.martinez@gmail.com', '1122334466', '5544332299', 'Calle 321, Puebla'),
+('luis321*', 'Luis', 'Ramírez', 'luis.ramirez@yahoo.com', '4433221112', '1100223355', 'Calle 654, León'),
+('elena789&', 'Elena', 'Sánchez', 'elena.sanchez@hotmail.com', '6677889902', '0099887767', 'Calle 987, Querétaro'),
+('pablo123^', 'Pablo', 'Hernández', 'pablo.hernandez@gmail.com', '9988772235', '2233441123', 'Calle 852, Mérida'),
+('lucia456!', 'Lucía', 'Castro', 'lucia.castro@outlook.com', '3344556688', '7766554435', 'Calle 741, Cancún'),
+('diego789$', 'Diego', 'Morales', 'diego.morales@gmail.com', '5566778811', '9988776666', 'Calle 963, Tijuana'),
+('fer159!', 'Fernanda', 'Ortega', 'fernanda.ortega@yahoo.com', '6655443344', '2233445577', 'Calle 159, Saltillo'),
+('gabriel753#', 'Gabriel', 'Núñez', 'gabriel.nunez@outlook.com', '1122334477', '5544332233', 'Calle 753, Oaxaca'),
+('paola951$', 'Paola', 'Mendoza', 'paola.mendoza@gmail.com', '4433221144', '1100223388', 'Calle 951, Veracruz'),
+('manuel951&', 'Manuel', 'Reyes', 'manuel.reyes@hotmail.com', '3344556679', '7766554436', 'Calle 951, Chihuahua'),
+('alejandra753^', 'Alejandra', 'Vega', 'alejandra.vega@outlook.com', '5566778844', '2233441199', 'Calle 753, Mexicali'),
+('sofia741*', 'Sofía', 'Torres', 'sofia.torres@gmail.com', '2233445599', '6655443399', 'Calle 741, Aguascalientes'),
+('sebastian852$', 'Sebastián', 'Flores', 'sebastian.flores@hotmail.com', '1122334488', '5544332277', 'Calle 852, Morelia'),
+('isabel963!', 'Isabel', 'Cruz', 'isabel.cruz@outlook.com', '4433221199', '1100223344', 'Calle 963, Ensenada'),
+('daniel159^', 'Daniel', 'Vargas', 'daniel.vargas@gmail.com', '3344556699', '7766554455', 'Calle 159, Zacatecas'),
+('andrea951#', 'Andrea', 'Ríos', 'andrea.rios@hotmail.com', '5566778855', '2233441133', 'Calle 951, Villahermosa'),
+('miguel753$', 'Miguel', 'Estrada', 'miguel.estrada@gmail.com', '9988776677', '6655443377', 'Calle 753, San Luis Potosí'),
+('javier123!', 'Javier', 'Domínguez', 'javier.dominguez@gmail.com', '3322114455', '5544331177', 'Calle 852, Tijuana'),
+('natalia456$', 'Natalia', 'Fernández', 'natalia.fernandez@hotmail.com', '7766554433', '6655443311', 'Calle 963, Guadalajara'),
+('ricardo789#', 'Ricardo', 'Guzmán', 'ricardo.guzman@outlook.com', '2233445566', '5544332266', 'Calle 741, CDMX'),
+('claudia654$', 'Claudia', 'Navarro', 'claudia.navarro@gmail.com', '3344556677', '2233441177', 'Calle 159, Puebla'),
+('hector321*', 'Héctor', 'Suárez', 'hector.suarez@yahoo.com', '5566778899', '1122334455', 'Calle 753, León'),
+('veronica789&', 'Verónica', 'Ruiz', 'veronica.ruiz@hotmail.com', '6677889900', '5544332233', 'Calle 456, Querétaro'),
+('roberto123^', 'Roberto', 'Jiménez', 'roberto.jimenez@gmail.com', '9988776655', '3344556677', 'Calle 654, Mérida'),
+('karina456!', 'Karina', 'Silva', 'karina.silva@outlook.com', '1122334456', '2233445588', 'Calle 852, Cancún'),
+('jorge789$', 'Jorge', 'Aguilar', 'jorge.aguilar@gmail.com', '9988772233', '5544331199', 'Calle 753, Saltillo'),
+('carmen654$', 'Carmen', 'Santos', 'carmen.santos@hotmail.com', '6677889901', '2233441155', 'Calle 963, Oaxaca');
 
 
 INSERT INTO bancos (banco_usr)
@@ -57,9 +67,7 @@ VALUES
 (17, '4888999900001111', 8, 'Isabel Cruz', '07/25'),
 (18, '4999000011112222', 9, 'Daniel Vargas', '03/24'),
 (19, '4000111122223333', 10, 'Andrea Ríos', '08/30'),
-(20, '4111222233334444', 1, 'Miguel Estrada', '04/29')
 (21, '5000000000001111', 2, 'Javier Domínguez', '05/27'),
-(21, '5000000000002222', 3, 'Javier Domínguez', '10/26'),
 (22, '5000000000003333', 4, 'Natalia Fernández', '03/28'),
 (22, '5000000000004444', 5, 'Natalia Fernández', '08/25'),
 (23, '5000000000005555', 6, 'Ricardo Guzmán', '07/27'),
@@ -69,14 +77,7 @@ VALUES
 (27, '5000000000009999', 7, 'Roberto Jiménez', '09/27'),
 (28, '5000000000010000', 6, 'Karina Silva', '02/29'),
 (29, '5000000000011111', 2, 'Jorge Aguilar', '11/28'),
-(30, '5000000000012222', 3, 'Carmen Santos', '04/30'),
-(3, '4000111122334455', 3, 'Carlos López', '08/25'),
-(6, '4222333344445555', 2, 'Elena Sánchez', '09/29'),
-(8, '4333444455556666', 4, 'Lucía Castro', '07/28'),
-(10, '4555666677778888', 1, 'Fernanda Ortega', '06/27'),
-(15, '4666777788889999', 5, 'Sofía Torres', '03/28'),
-(18, '4777888899990000', 8, 'Daniel Vargas', '12/30'),
-(20, '4888999900001111', 7, 'Miguel Estrada', '10/27');
+(30, '5000000000012222', 3, 'Carmen Santos', '04/30');
 
 INSERT INTO productos (nom_producto, desc_producto, precio, empresa_nom)
 VALUES 
