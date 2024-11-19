@@ -1,4 +1,4 @@
-INSERT INTO usuarios (clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion)
+INSERT INTO usuarios (clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario)
 VALUES 
 ('clave123!', 'Juan', 'Pérez', 'juan.perez@gmail.com', '1234567890', '0987654321', 'Calle 123, Monterrey'),
 ('maria456$', 'María', 'González', 'maria.gonzalez@hotmail.com', '2233445567', '6655443328', 'Calle 456, Guadalajara'),

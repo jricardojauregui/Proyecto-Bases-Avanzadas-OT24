@@ -4,30 +4,30 @@ import hashlib
 
 class Usuario:
     @staticmethod
-    def insertUsuario(nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion): ### FALTA TABLA
+    def insertUsuario(clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario): 
         cur = mysql.connection.cursor()
-        cur.execute() ### FALTA PROCEDURE INSERT
+        cur.callproc('InsertUsuario', (clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario)) 
         mysql.connection.commit()
         cur.close
 
     @staticmethod
-    def updateUsuario(): ### FALTA TABLA
+    def updateUsuario(id_usr, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario): 
         cur = mysql.connection.cursor()
-        cur.execute() ### FALTA PROCEDURE UPDATE
+        cur.callproc('UpdateUsuario', (id_usr, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario)) 
         mysql.connection.commit()
         cur.close
 
     @staticmethod
-    def deleteUsuario(): ### FALTA TABLA
+    def deleteUsuario(id_usr): 
         cur = mysql.connection.cursor()
-        cur.execute() ### FALTA PROCEDURE DELETE
+        cur.callproc('DeleteUsuario', (id_usr,)) 
         mysql.connection.commit()
         cur.close
 
     @staticmethod
     def get_all():
         cur = mysql.connection.cursor()
-        cur.callproc('') ### FALTA PROCEDURE MOSTRAR
+        cur.callproc('MostrarUsuarios') 
         usuarios = cur.fetchall()
         cur.close()
         return usuarios
@@ -35,7 +35,7 @@ class Usuario:
     @staticmethod
     def get_by_id(usuarios):
         cur = mysql.connection.cursor()
-        cur.execute("", ()) ### FALTA PROCEDURE MOSTRAR , checar si mejor cambiarlo a callproc
+        cur.callproc('MostrarUsuarioPorID', (id_usr,)) 
         usuarios = cur.fetchone()
         cur.close()
         return usuarios
