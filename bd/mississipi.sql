@@ -1,12 +1,14 @@
 CREATE TABLE usuarios (
     id_usr INT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+    clave varchar(100) NOT NULL,
     nom_usr VARCHAR(100) NOT NULL,
     apellido_usr VARCHAR(100) NOT NULL,
     correo_usr VARCHAR(100) NOT NULL,
     tel_usr VARCHAR(100) NOT NULL,
     tel_domicilio VARCHAR(100) NOT NULL,
     direccion VARCHAR(100) NOT NULL,
-    fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    foto_usuario varchar(255)
 );
 
 CREATE TABLE bancos (
@@ -39,6 +41,7 @@ CREATE TABLE productos (
     precio DECIMAL(10, 2) NOT NULL,
     fecha_agregacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     empresa_nom VARCHAR(100) NOT NULL,
+    foto_producto varchar(255),
     PRIMARY KEY (id_producto)
 );
 

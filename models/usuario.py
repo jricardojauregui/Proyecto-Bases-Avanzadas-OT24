@@ -4,7 +4,7 @@ import hashlib
 
 class Usuario:
     @staticmethod
-    def insertUsuario(): ### FALTA TABLA
+    def insertUsuario(nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion): ### FALTA TABLA
         cur = mysql.connection.cursor()
         cur.execute() ### FALTA PROCEDURE INSERT
         mysql.connection.commit()
