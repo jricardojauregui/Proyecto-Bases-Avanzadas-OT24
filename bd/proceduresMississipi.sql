@@ -86,3 +86,18 @@ BEGIN
         id_usr = p_id_usr;
 END //
 DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE MostrarUsuarioPorID(
+    IN p_nombre_usr INT
+)
+BEGIN
+    SELECT 
+        id_usr, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, fecha_registro, foto_usuario
+    FROM 
+        usuarios
+    WHERE 
+        nom_usr = p_nombre_usr;
+END //
+DELIMITER ;
