@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
 from database import mysql, init_app
 
-from controllers.adminController import loginAdmin, registerAdmin, logoutAdmin, mostrarEmpresas, editarEmpresas, eliminarEmpresas
+from controllers.adminController import loginAdmin, logoutAdmin, mostrarEmpresas, editarEmpresas, eliminarEmpresas
 from controllers.empresasController import loginEmp, registerEmp, logoutEmp, editarEmp
 from controllers.usuarioController import loginU, registerU, logoutU, compra
 
@@ -23,7 +23,6 @@ def inicio():
 
 ### RUTAS ADMIN
 app.add_url_rule('/loginAdmin', view_func=loginAdmin, methods=['GET', 'POST'])
-app.add_url_rule('/registerAdmin', view_func=registerAdmin, methods=['GET', 'POST'])
 app.add_url_rule('/logoutAdmin', view_func=logoutAdmin)
 app.add_url_rule('/empresas', view_func=mostrarEmpresas)
 app.add_url_rule('/editarEmpresas/<int:id>', view_func=editarEmpresas, methods=['GET', 'POST'])
