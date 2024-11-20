@@ -2,6 +2,7 @@
 
 DELIMITER //
 CREATE PROCEDURE InsertUsuario(
+    IN p_username VARCHAR(100),
     IN p_clave VARCHAR(100),
     IN p_nom_usr VARCHAR(100),
     IN p_apellido_usr VARCHAR(100),
@@ -13,10 +14,10 @@ CREATE PROCEDURE InsertUsuario(
 )
 BEGIN
     INSERT INTO usuarios (
-        clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario
+        username, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario
     ) 
     VALUES (
-        p_clave, p_nom_usr, p_apellido_usr, p_correo_usr, p_tel_usr, p_tel_domicilio, p_direccion, p_foto_usuario
+        p_username, p_clave, p_nom_usr, p_apellido_usr, p_correo_usr, p_tel_usr, p_tel_domicilio, p_direccion, p_foto_usuario
     );
 END //
 DELIMITER ;
@@ -24,7 +25,7 @@ DELIMITER ;
 -- Actualizar un usuario 
 DELIMITER //
 CREATE PROCEDURE UpdateUsuario(
-    IN p_id_usr INT,
+    IN p_username VARCHAR(100),
     IN p_clave VARCHAR(100),
     IN p_nom_usr VARCHAR(100),
     IN p_apellido_usr VARCHAR(100),
@@ -37,6 +38,7 @@ CREATE PROCEDURE UpdateUsuario(
 BEGIN
     UPDATE usuarios
     SET 
+        username = p_username
         clave = p_clave,
         nom_usr = p_nom_usr,
         apellido_usr = p_apellido_usr,

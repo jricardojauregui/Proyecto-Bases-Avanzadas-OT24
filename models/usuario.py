@@ -60,11 +60,10 @@ class Usuario:
             cur.close()
         return None
 
-
-    def register_user(clave, username, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario):
+    def register_user(username, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario):
         cur = mysql.connection.cursor()
         try:
-            cur.callproc('InsertUsuario', [clave, username, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario])
+            cur.callproc('InsertUsuario', [username, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario])
             mysql.connection.commit()
             return True, 'Registro exitoso.'
         
@@ -72,3 +71,33 @@ class Usuario:
             return False, str(e)
         finally:
             cur.close()
+
+    def update_user(id_usr, username, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario):
+        cur = mysql.connection.cursor()
+        try:
+            cur.execute('SELECT * FROM usuarios WHERE id_usr = %s', (id_usr,))
+            current_user = cur.fetchone()
+
+            if not current_user:
+                return False, "Usuario no encontrado."
+
+            username = username or current_user['username']
+            clave = clave or current_user['clave']
+            nom_usr = nom_usr or current_user['nom_usr']
+            apellido_usr = apellido_usr or current_user['apellido_usr']
+            correo_usr = correo_usr or current_user['correo_usr']
+            tel_usr = tel_usr or current_user['tel_usr']
+            tel_domicilio = tel_domicilio or current_user['tel_domicilio']
+            direccion = direccion or current_user['direccion']
+            foto_usuario = foto_usuario or current_user['foto_usuario']
+
+            cur.callproc('UpdateUsuario', [id_usr, username, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario])
+            mysql.connection.commit()  
+            return True, "Usuario actualizado correctamente."
+        
+        except MySQLdb.Error as e:
+            return False, str(e)
+        finally:
+            cur.close()
+
+
