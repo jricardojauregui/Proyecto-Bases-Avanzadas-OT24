@@ -70,7 +70,7 @@ def updateU():
         tel_usr = request.form.get('tel_usr')
         tel_domicilio = request.form.get('tel_domicilio')
         direccion = request.form.get('direccion')
-        foto_usuario = request.form.get('foto_usuario', '')  # Opcional
+        foto_usuario = request.form.get('foto_usuario', '')  
 
         hashed_clave = hashlib.sha256(clave.encode()).hexdigest() if clave else None
 
