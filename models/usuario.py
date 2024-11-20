@@ -41,31 +41,34 @@ class Usuario:
         cur.close()
         return usuarios
     
-def login_user(nom_usr, clave):
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    hashed_clave = hashlib.sha256(clave.encode()).hexdigest()
+    def login_user(username, hashed_password):
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        try:
+            cur.execute('SELECT * FROM usuarios WHERE username = %s AND clave = %s', (username, hashed_password))
+            user = cur.fetchone()  
+            
+            if user:
+                stored_password = user['clave']  
+                print(f"Contraseña ingresada (hash): {hashed_password}")
+                print(f"Contraseña almacenada: {stored_password}")
+                
+                if stored_password == hashed_password:  
+                    return user
+        except MySQLdb.Error as e:
+            return False, str(e)
+        finally:
+            cur.close()
+        return None
 
-    cur.callproc('MostrarUsuarioPorID', (nom_usr,)) 
-    user = cur.fetchone()
 
-    if user:
-        stored_clave = user['clave']  
-        print(f"Contraseña ingresada (hash): {hashed_clave}")
-        print(f"Contraseña almacenada: {stored_clave}")
-
-        if stored_clave == hashed_clave:
-            return user
-
-    return None
-
-
-def register_user(nom_usr, clave):
-    cur = mysql.connection.cursor()
-    hashed_clave = hashlib.sha256(clave.encode()).hexdigest()
-
-    try:
-        cur.callproc('registrarUsuario', [nom_usr, hashed_clave])
-        mysql.connection.commit()
-        return True, 'Registro exitoso.'
-    except MySQLdb.exceptions.OperationalError as e: 
-        return False, str(e)
+    def register_user(clave, username, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario):
+        cur = mysql.connection.cursor()
+        try:
+            cur.callproc('InsertUsuario', [clave, username, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario])
+            mysql.connection.commit()
+            return True, 'Registro exitoso.'
+        
+        except MySQLdb.exceptions.OperationalError as e:
+            return False, str(e)
+        finally:
+            cur.close()
