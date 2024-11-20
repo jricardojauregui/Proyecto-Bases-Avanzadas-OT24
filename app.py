@@ -31,5 +31,5 @@ app.add_url_rule('/eliminarEmpresas/<int:id>', view_func=eliminarEmpresas, metho
 app.add_url_rule('/login', view_func=loginU, methods=['GET', 'POST'])
 app.add_url_rule('/registrar', view_func=registerU, methods=['GET', 'POST'])
 app.add_url_rule('/update', view_func=updateU, methods=['GET', 'POST'])
-app.add_url_rule('/logoutEmp', view_func=logoutU)
+app.add_url_rule('/logout', view_func=logoutU)
 app.add_url_rule('/compra', view_func=compra, methods=['GET', 'POST'])

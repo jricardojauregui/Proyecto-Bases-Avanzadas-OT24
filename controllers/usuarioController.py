@@ -85,6 +85,11 @@ def updateU():
     
     return render_template('editar_perfil.html')  # checar esto
 
+def logoutU():
+    session.clear()  
+    flash('Has cerrado sesión correctamente.', 'success')  
+    return redirect(url_for('inicio'))  ### checar esto
+
 
 
 
