@@ -103,3 +103,59 @@ BEGIN
         nom_usr = p_nombre_usr;
 END //
 DELIMITER ;
+
+--confirma compra en carrito
+
+DELIMITER //
+CREATE PROCEDURE ConfirmarCompra(IN p_id_usr INT, IN p_tarjeta_usr VARCHAR(100))
+BEGIN
+    DECLARE v_id_pedido INT;
+    INSERT INTO pedidos (fecha_pedido, estado_pedido, id_usr, tarjeta_usr)
+    VALUES (CURDATE(), 'Completado', p_id_usr, p_tarjeta_usr);
+    SET v_id_pedido = LAST_INSERT_ID();
+    INSERT INTO detalle_pedidos (id_pedido, id_producto, cantidad_solicitada, precio_unitario)
+    SELECT v_id_pedido, id_producto, cantidad, precio_unitario
+    FROM carrito_compras
+    WHERE id_usr = p_id_usr;
+    UPDATE inventario i
+    INNER JOIN carrito_compras c ON i.id_producto = c.id_producto
+    SET i.stock = i.stock - c.cantidad
+    WHERE c.id_usr = p_id_usr;
+    DELETE FROM carrito_compras WHERE id_usr = p_id_usr;
+END //
+DELIMITER ;
+
+
+-- procedimiento para comprar sin carrito 
+
+DELIMITER //
+
+CREATE PROCEDURE CompraDirecta(
+    IN p_id_usr INT,
+    IN p_id_producto INT,
+    IN p_cantidad INT,
+    IN p_tarjeta_usr VARCHAR(100)
+)
+BEGIN
+    DECLARE v_id_pedido INT;
+    INSERT INTO pedidos (fecha_pedido, id_usr, tarjeta_usr)
+    VALUES (CURDATE(), p_id_usr, p_tarjeta_usr);
+    SET v_id_pedido = LAST_INSERT_ID();
+
+    INSERT INTO detalle_pedidos (id_pedido, id_producto, cantidad_solicitada, precio_unitario)
+    VALUES (v_id_pedido, p_id_producto, p_cantidad, (SELECT precio FROM productos WHERE id_producto = p_id_producto));
+END //
+
+DELIMITER ;
+
+-- Mostrar productos por catgoria
+
+DELIMITER //
+
+CREATE PROCEDURE MostrarProductosPorCategoria(IN p_nombre_categoria VARCHAR(100))
+BEGIN
+    SELECT * FROM productos p INNER JOIN productos_categorias pc ON p.id_producto = pc.id_producto INNER JOIN categorias c ON pc.id_categoria = c.id_categoria WHERE c.categoria = p_nombre_categoria;
+END //
+
+DELIMITER ;
+

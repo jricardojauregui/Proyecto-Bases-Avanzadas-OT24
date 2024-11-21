@@ -78,5 +78,3 @@ class Usuario:
             return False, str(e)
         finally:
             cur.close()
-
-
