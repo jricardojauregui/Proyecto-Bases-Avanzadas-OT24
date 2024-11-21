@@ -3,7 +3,7 @@ from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
 from database import mysql, init_app
 
 from controllers.adminController import loginAdmin, logoutAdmin, mostrarEmpresas, editarEmpresas, eliminarEmpresas
-from controllers.usuarioController import loginU, registerU, updateU, logoutU, compra
+from controllers.usuarioController import loginU, registerU, updateU, logoutU, add_product_to_cart, confirm_cart_purchase
 
 app = Flask(__name__)
 
@@ -32,4 +32,6 @@ app.add_url_rule('/login', view_func=loginU, methods=['GET', 'POST'])
 app.add_url_rule('/registrar', view_func=registerU, methods=['GET', 'POST'])
 app.add_url_rule('/update', view_func=updateU, methods=['GET', 'POST'])
 app.add_url_rule('/logout', view_func=logoutU)
-app.add_url_rule('/compra', view_func=compra, methods=['GET', 'POST'])
+app.add_url_rule('/carrito', view_func=add_product_to_cart, methods=['GET, POST'])
+app.add_url_rule('/confirmarCompra', view_func=confirm_cart_purchase, methods=['GET, POST'])
+
