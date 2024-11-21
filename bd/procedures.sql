@@ -732,3 +732,32 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE checarWishlist(
+    IN id_usr INT,
+    IN id_producto INT
+)
+BEGIN
+    SELECT 1 
+    FROM wish_list 
+    WHERE id_usr = id_usr AND id_producto = id_producto;
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE PROCEDURE autenticarUser(
+    IN username VARCHAR(255),
+    IN hashed_password VARCHAR(255)
+)
+BEGIN
+    SELECT id_usr 
+    FROM usuarios 
+    WHERE username = username AND clave = hashed_password;
+END //
+
+DELIMITER ;

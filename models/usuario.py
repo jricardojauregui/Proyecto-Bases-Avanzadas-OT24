@@ -118,11 +118,9 @@ class Usuario:
     def get_wishlist_status(id_usr, id_producto):
         cur = mysql.connection.cursor()
         try:
-            cur.execute(
-                "SELECT 1 FROM wish_list WHERE id_usr = %s AND id_producto = %s",
-                (id_usr, id_producto)
-            )
-            return cur.fetchone() is not None
+            cur.callproc('checarWishlist', [id_usr, id_producto])
+            result = cur.fetchone() 
+            return result is not None
         except MySQLdb.Error as e:
             print(f"Error al verificar estado de wishlist: {e}")
             return False
@@ -271,10 +269,7 @@ def validate_user_credentials(username, password):
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     try:
         hashed_password = hashlib.sha256(password.encode()).hexdigest() 
-        cur.execute(
-            "SELECT id_usr FROM usuarios WHERE username = %s AND clave = %s",
-            (username, hashed_password)
-        )
+        cur.callproc('autenticarUser', [username, hashed_password])
         user = cur.fetchone()
         if not user:
             return None 
