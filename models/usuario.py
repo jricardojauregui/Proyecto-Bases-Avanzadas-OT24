@@ -91,6 +91,55 @@ class Usuario:
         finally:
             cur.close()
 
+    def get_cart(id_usr):
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        try:
+            cur.callproc('MostrarCarritoDeUsuario', [id_usr])
+            cart = cur.fetchall()
+            return cart
+        
+        except MySQLdb.Error as e:
+            return False, str(e)
+        finally:
+            cur.close()
+
+    def clear_cart(id_usr):
+        cur = mysql.connection.cursor()
+        try:
+            cur.callproc('QuitarTodoCarrito', [id_usr])
+            mysql.connection.commit()
+            return True, "Carrito vaciado exitosamente."
+        
+        except MySQLdb.Error as e:
+            return False, str(e)
+        finally:
+            cur.close()
+
+    def remove_from_cart(id_usr, id_producto):
+        cur = mysql.connection.cursor()
+        try:
+            cur.callproc('QuitarProductoCarrito', [id_usr, id_producto])
+            mysql.connection.commit()
+            return True, "Producto eliminado del carrito."
+        
+        except MySQLdb.Error as e:
+            return False, str(e)
+        finally:
+            cur.close()
+
+
+    def get_user_cards(id_usr):
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        try:
+            cur.callproc('verTarjetasUsuario', [id_usr])
+            tarjetas = cur.fetchall()
+            return tarjetas
+        
+        except MySQLdb.Error as e:
+            return False, str(e)
+        finally:
+            cur.close()
+
 
     def confirm_purchase(id_usr, tarjeta_usr):
         cur = mysql.connection.cursor()
@@ -98,10 +147,12 @@ class Usuario:
             cur.callproc('ConfirmarCompra', [id_usr, tarjeta_usr])
             mysql.connection.commit()
             return True, "Compra confirmada exitosamente."
+        
         except MySQLdb.Error as e:
             return False, str(e)
         finally:
             cur.close()
+
 
     def usr_order_history(id_usr):
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)

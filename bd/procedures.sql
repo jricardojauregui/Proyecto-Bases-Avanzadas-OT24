@@ -94,20 +94,6 @@ END //
 DELIMITER ;
 
 
-DELIMITER //
-CREATE PROCEDURE MostrarUsuarioPorID(
-    IN p_nombre_usr INT
-)
-BEGIN
-    SELECT 
-        id_usr, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, fecha_registro, foto_usuario
-    FROM 
-        usuarios
-    WHERE 
-        nom_usr = p_nombre_usr;
-END //
-DELIMITER ;
-
 
 --confirma compra en carrito
 
@@ -153,11 +139,11 @@ END //
 
 DELIMITER ;
 
---añadir productos al carrito
+--añadir producto a carrito
 
 DELIMITER //
 
-CREATE PROCEDURE anadirCarrito(
+CREATE PROCEDURE añadirCarrito(
     IN p_id_usr INT,
     IN p_id_producto INT,
     IN p_cantidad INT
@@ -170,6 +156,7 @@ DELIMITER ;
 
 -- Mostrar productos por catgoria
 
+
 DELIMITER //
 
 CREATE PROCEDURE MostrarProductosPorNombreCategoria(
@@ -180,6 +167,8 @@ BEGIN
 END //
 
 DELIMITER ;
+
+
 
 --mostrar productos mas nuevos (10)
 
@@ -203,6 +192,7 @@ BEGIN
 END //
 
 DELIMITER ;
+
 
 --actualizar stock
 
@@ -263,6 +253,7 @@ END //
 
 DELIMITER ;
 
+
 --Mostrar productos en promocion
 
 DELIMITER //
@@ -273,6 +264,7 @@ BEGIN
 END //
 
 DELIMITER ;
+
 
 --historial de pedidos por usuario
 
@@ -287,6 +279,7 @@ BEGIN
 END //
 
 DELIMITER ;
+
 
 --Instertar productos
 
@@ -347,6 +340,7 @@ END //
 
 DELIMITER ;
 
+
 --crear promocion
 
 DELIMITER //
@@ -368,6 +362,7 @@ BEGIN
 END //
 
 DELIMITER ;
+
 
 --editar promocion
 
@@ -394,6 +389,7 @@ BEGIN
 END //
 
 DELIMITER ;
+
 
 --borrar promocion
 
@@ -427,7 +423,6 @@ DELIMITER ;
 --desasignar promociones a productos
 
 DELIMITER //
-
 CREATE PROCEDURE DesasignarPromocionProducto(
     IN p_id_promocion INT,
     IN p_id_producto INT
@@ -435,6 +430,172 @@ CREATE PROCEDURE DesasignarPromocionProducto(
 BEGIN
     DELETE FROM productos_promociones
     WHERE id_promocion = p_id_promocion AND id_producto = p_id_producto;
+END //
+DELIMITER ;
+
+
+-- mostrar producto en especifico
+
+DELIMITER //
+CREATE PROCEDURE MostrarProductoEspecifico(
+    IN p_id_producto INT
+)
+BEGIN
+    SELECT id_producto, nom_producto, desc_producto, precio, empresa_nom, fecha_agregacion, foto_producto FROM productos WHERE id_producto = p_id_producto;
+END //
+DELIMITER ;
+
+
+
+--añadir producto a wish list
+
+DELIMITER //
+CREATE PROCEDURE AñadirProductoWishList(
+    IN p_id_usr INT,
+    IN p_id_producto INT
+)
+BEGIN
+    INSERT INTO wish_list (id_usr, id_producto, fecha_agregado) VALUES (p_id_usr, p_id_producto, CURRENT_TIMESTAMP);
+END //
+DELIMITER ;
+
+
+-- quitar producto a wish list
+
+DELIMITER //
+CREATE PROCEDURE QuitarProductoWishList(
+    IN p_id_usr INT,
+    IN p_id_producto INT
+)
+BEGIN
+    DELETE FROM wish_list WHERE id_usr = p_id_usr AND id_producto = p_id_producto;
+END //
+DELIMITER ;
+
+
+
+-- quitar del carrito (individual)
+
+DELIMITER //
+CREATE PROCEDURE QuitarProductoCarrito(
+    IN p_id_usr INT,
+    IN p_id_producto INT
+)
+BEGIN
+    DELETE FROM carrito_compras WHERE id_usr = p_id_usr AND id_producto = p_id_producto;
+END //
+DELIMITER ;
+
+-- quitar del carrito todo
+
+DELIMITER //
+CREATE PROCEDURE QuitarTodoCarrito(
+    IN p_id_usr INT
+)
+BEGIN
+    DELETE FROM carrito_compras WHERE id_usr = p_id_usr;
+END //
+DELIMITER ;
+
+--añadir tarjeta
+
+DELIMITER //
+
+CREATE PROCEDURE AñadirTarjeta(
+    IN p_id_usr INT,
+    IN p_tarjeta_usr VARCHAR(100),
+    IN p_id_banco INT,
+    IN p_propietario VARCHAR(100),
+    IN p_caduci_tarjeta VARCHAR(100)
+)
+BEGIN
+    INSERT INTO tarjetas (id_usr, tarjeta_usr, id_banco, propietario, caduci_tarjeta) VALUES (p_id_usr, p_tarjeta_usr, p_id_banco, p_propietario, p_caduci_tarjeta);
+END //
+
+DELIMITER ;
+
+--borrar tarjeta
+
+DELIMITER //
+
+CREATE PROCEDURE BorrarTarjeta(
+    IN p_id_usr INT,
+    IN p_tarjeta_usr VARCHAR(100)
+)
+BEGIN
+    DECLARE v_tarjetas_count INT;
+    SELECT COUNT(*) INTO v_tarjetas_count FROM tarjetas WHERE id_usr = p_id_usr;
+    IF v_tarjetas_count > 1 THEN
+        DELETE FROM tarjetas
+        WHERE id_usr = p_id_usr AND tarjeta_usr = p_tarjeta_usr;
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Tienes que tener una tarjeta registrada.';
+    END IF;
+END //
+
+DELIMITER ;
+
+
+--sistema de recomendaciones
+
+DELIMITER //
+ CREATE PROCEDURE sistemaRecomendaciones(
+     IN p_id_usr INT
+ )
+BEGIN
+    DECLARE p_id_categoria INT;
+    SELECT pc.id_categoria INTO p_id_categoria FROM detalle_pedidos dp INNER JOIN productos p ON dp.id_producto = p.id_producto INNER JOIN productos_categorias pc ON p.id_producto = pc.id_producto WHERE dp.id_pedido IN (SELECT id_pedido FROM pedidos WHERE id_usr = p_id_usr) GROUP BY pc.id_categoria ORDER BY COUNT(*) DESC LIMIT 1;
+    SELECT p.id_producto, p.nom_producto, p.desc_producto, p.precio, p.empresa_nom FROM productos p INNER JOIN productos_categorias pc ON p.id_producto = pc.id_producto WHERE pc.id_categoria = p_id_categoria ORDER BY p.fecha_agregacion DESC LIMIT 5;
+END //
+DELIMITER ;
+
+--crear calificaciones por producto
+
+DELIMITER //
+CREATE PROCEDURE CrearCalificacion(
+    IN p_id_usr INT,
+    IN p_id_producto INT,
+    IN p_calificacion INT,
+    IN p_comentario TEXT
+)
+BEGIN
+    INSERT INTO calificaciones (id_usr, id_producto, calificacion, comentario) VALUES (p_id_usr, p_id_producto, p_calificacion, p_comentario);
+END //
+DELIMITER ;
+
+
+-- borrar calificaciones por producto
+
+DELIMITER //
+CREATE PROCEDURE BorrarCalificacion(
+    IN p_id_calificacion INT
+)
+BEGIN
+    DELETE FROM calificaciones WHERE id_calificacion = p_id_calificacion;
+END //
+DELIMITER ;
+
+
+-- ver calificaciones por producto
+
+DELIMITER //
+CREATE PROCEDURE VerCalificacionesPorProducto(
+    IN p_id_producto INT
+)
+BEGIN
+    SELECT id_calificacion, id_usr, calificacion, comentario, fecha_calificacion FROM calificaciones WHERE id_producto = p_id_producto;
+END //
+DELIMITER ;
+
+--ver tarjetas usuario
+
+DELIMITER //
+
+CREATE PROCEDURE verTarjetasUsuario(
+    IN p_id_usr INT
+)
+BEGIN 
+    SELECT tarjeta_usr, banco_usr FROM tarjetas t INNER JOIN bancos b ON t.id_banco = b.id_banco WHERE t.id_usr = p_id_usr;
 END //
 
 DELIMITER ;
