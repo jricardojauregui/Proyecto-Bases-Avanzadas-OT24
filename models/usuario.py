@@ -83,9 +83,9 @@ class Usuario:
         cur = mysql.connection.cursor()
         try:
             cur.callproc('anadirCarrito', [id_usr, id_producto, cantidad])
-
             mysql.connection.commit()
             return True, "Producto agregado al carrito."
+        
         except MySQLdb.Error as e:
             return False, str(e)
         finally:
@@ -98,6 +98,18 @@ class Usuario:
             cur.callproc('ConfirmarCompra', [id_usr, tarjeta_usr])
             mysql.connection.commit()
             return True, "Compra confirmada exitosamente."
+        except MySQLdb.Error as e:
+            return False, str(e)
+        finally:
+            cur.close()
+
+    def usr_order_history(id_usr):
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        try:
+            cur.callproc('HistorialPedidosPorUsuario', [id_usr])
+            orders = cur.fetchall()
+            return orders
+        
         except MySQLdb.Error as e:
             return False, str(e)
         finally:

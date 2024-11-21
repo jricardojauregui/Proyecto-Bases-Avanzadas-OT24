@@ -153,6 +153,8 @@ END //
 
 DELIMITER ;
 
+--añadir productos al carrito
+
 DELIMITER //
 
 CREATE PROCEDURE anadirCarrito(
@@ -166,5 +168,273 @@ END //
 
 DELIMITER ;
 
+-- Mostrar productos por catgoria
+
+DELIMITER //
+
+CREATE PROCEDURE MostrarProductosPorNombreCategoria(
+    IN p_nombre_categoria VARCHAR(100)
+)
+BEGIN
+    SELECT p.id_producto, p.nom_producto, p.desc_producto, p.precio, p.empresa_nom FROM productos p INNER JOIN productos_categorias pc ON p.id_producto = pc.id_producto INNER JOIN categorias c ON pc.id_categoria = c.id_categoria WHERE c.categoria = p_nombre_categoria;
+END //
+
+DELIMITER ;
+
+--mostrar productos mas nuevos (10)
+
+DELIMITER //
+
+CREATE PROCEDURE MostrarProductosMasNuevos()
+BEGIN
+    SELECT * FROM productos ORDER BY fecha_agregacion DESC LIMIT 10;
+END //
+
+DELIMITER ;
+
+--mostrar los 10 productos mas solicitados
+
+DELIMITER //
+
+CREATE PROCEDURE MostrarProductosMasSolicitadosParaWeb()
+BEGIN
+    SELECT p.id_producto, p.nom_producto, p.desc_producto, p.precio, p.empresa_nom FROM productos p INNER JOIN detalle_pedidos dp ON p.id_producto = dp.id_producto GROUP BY p.id_producto, p.nom_producto, p.desc_producto, p.precio, p.empresa_nom ORDER BY SUM(dp.cantidad_solicitada) DESC
+    LIMIT 10;
+END //
+
+DELIMITER ;
+
+--actualizar stock
+
+DELIMITER //
+
+CREATE PROCEDURE ActualizarStock(
+    IN p_id_producto INT,
+    IN p_stock_agregado INT
+)
+BEGIN
+    UPDATE inventario
+    SET stock = stock + p_stock_agregado
+    WHERE id_producto = p_id_producto;
+END //
+
+DELIMITER ;
 
 
+--Mostrar carro compras
+
+DELIMITER //
+
+CREATE PROCEDURE MostrarCarritoDeUsuario(
+    IN p_id_usr INT
+)
+BEGIN
+    SELECT 
+        c.id_producto, p.nom_producto, c.cantidad, c.precio_unitario, (c.cantidad * c.precio_unitario) AS total
+    FROM 
+        carrito_compras c INNER JOIN productos p ON c.id_producto = p.id_producto
+    WHERE 
+        c.id_usr = p_id_usr;
+END //
+
+DELIMITER ;
+
+--Actualizar productos
+
+DELIMITER //
+
+CREATE PROCEDURE ActualizarProducto(
+    IN p_id_producto INT,
+    IN p_nom_producto VARCHAR(100),
+    IN p_desc_producto TEXT,
+    IN p_precio DECIMAL(10, 2),
+    IN p_empresa_nom VARCHAR(100)
+)
+BEGIN
+    UPDATE productos
+    SET 
+        nom_producto = p_nom_producto,
+        desc_producto = p_desc_producto,
+        precio = p_precio,
+        empresa_nom = p_empresa_nom
+    WHERE 
+        id_producto = p_id_producto;
+END //
+
+DELIMITER ;
+
+--Mostrar productos en promocion
+
+DELIMITER //
+
+CREATE PROCEDURE MostrarProductosEnPromocion()
+BEGIN
+    SELECT p.id_producto, p.nom_producto, p.desc_producto, p.precio, pr.nom_promocion, pr.descuento, pr.fecha_inicio, pr.fecha_fin FROM productos p INNER JOIN productos_promociones pp ON p.id_producto = pp.id_producto INNER JOIN promociones pr ON pp.id_promocion = pr.id_promocion WHERE pr.activo = TRUE ORDER BY pr.fecha_fin ASC;
+END //
+
+DELIMITER ;
+
+--historial de pedidos por usuario
+
+DELIMITER //
+
+CREATE PROCEDURE HistorialPedidosPorUsuario(
+    IN p_id_usr INT
+)
+BEGIN
+    SELECT p.id_pedido, p.fecha_pedido, p.estado_pedido, dp.id_producto, prod.nom_producto, dp.cantidad_solicitada, dp.precio_unitario, dp.subtotal
+    FROM pedidos p INNER JOIN detalle_pedidos dp ON p.id_pedido = dp.id_pedido INNER JOIN productos prod ON dp.id_producto = prod.id_producto WHERE p.id_usr = p_id_usr ORDER BY p.fecha_pedido DESC;
+END //
+
+DELIMITER ;
+
+--Instertar productos
+
+DELIMITER //
+
+CREATE PROCEDURE InsertarProducto(
+    IN p_nom_producto VARCHAR(100),
+    IN p_desc_producto TEXT,
+    IN p_precio DECIMAL(10, 2),
+    IN p_empresa_nom VARCHAR(100),
+    IN p_foto_producto VARCHAR(255)
+)
+BEGIN
+    INSERT INTO productos (
+        nom_producto, desc_producto, precio, empresa_nom, foto_producto
+    )
+    VALUES (
+        p_nom_producto, p_desc_producto, p_precio, p_empresa_nom, p_foto_producto
+    );
+END //
+
+DELIMITER ;
+
+-- borrar productos
+
+DELIMITER //
+
+CREATE PROCEDURE BorrarProducto(
+    IN p_id_producto INT
+)
+BEGIN
+    DELETE FROM productos
+    WHERE id_producto = p_id_producto;
+END //
+
+DELIMITER ;
+
+--asignar categoria a productos
+
+DELIMITER //
+
+CREATE PROCEDURE AsignarCategoriaAProducto(
+    IN p_id_categoria INT,
+    IN p_id_producto INT
+)
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM productos_categorias 
+        WHERE id_categoria = p_id_categoria AND id_producto = p_id_producto
+    ) THEN
+        INSERT INTO productos_categorias (id_categoria, id_producto)
+        VALUES (p_id_categoria, p_id_producto);
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La categoría ya está asignada al producto.';
+    END IF;
+END //
+
+DELIMITER ;
+
+--crear promocion
+
+DELIMITER //
+
+CREATE PROCEDURE InsertarPromocion(
+    IN p_nom_promocion VARCHAR(100),
+    IN p_descuento DECIMAL(5, 2),
+    IN p_fecha_inicio DATE,
+    IN p_fecha_fin DATE,
+    IN p_activo BOOLEAN
+)
+BEGIN
+    INSERT INTO promociones (
+        nom_promocion, descuento, fecha_inicio, fecha_fin, activo
+    )
+    VALUES (
+        p_nom_promocion, p_descuento, p_fecha_inicio, p_fecha_fin, p_activo
+    );
+END //
+
+DELIMITER ;
+
+--editar promocion
+
+DELIMITER //
+
+CREATE PROCEDURE EditarPromocion(
+    IN p_id_promocion INT,
+    IN p_nom_promocion VARCHAR(100),
+    IN p_descuento DECIMAL(5, 2),
+    IN p_fecha_inicio DATE,
+    IN p_fecha_fin DATE,
+    IN p_activo BOOLEAN
+)
+BEGIN
+    UPDATE promociones
+    SET 
+        nom_promocion = p_nom_promocion,
+        descuento = p_descuento,
+        fecha_inicio = p_fecha_inicio,
+        fecha_fin = p_fecha_fin,
+        activo = p_activo
+    WHERE 
+        id_promocion = p_id_promocion;
+END //
+
+DELIMITER ;
+
+--borrar promocion
+
+DELIMITER //
+
+CREATE PROCEDURE BorrarPromocion(
+    IN p_id_promocion INT
+)
+BEGIN
+    DELETE FROM promociones
+    WHERE id_promocion = p_id_promocion;
+END //
+
+DELIMITER ;
+
+--asignar promocion a productos
+
+DELIMITER //
+
+CREATE PROCEDURE AsignarPromocionAProducto(
+    IN p_id_promocion INT,
+    IN p_id_producto INT
+)
+BEGIN
+    INSERT INTO productos_promociones (id_promocion, id_producto)
+    VALUES (p_id_promocion, p_id_producto);
+END //
+
+DELIMITER ;
+
+--desasignar promociones a productos
+
+DELIMITER //
+
+CREATE PROCEDURE DesasignarPromocionProducto(
+    IN p_id_promocion INT,
+    IN p_id_producto INT
+)
+BEGIN
+    DELETE FROM productos_promociones
+    WHERE id_promocion = p_id_promocion AND id_producto = p_id_producto;
+END //
+
+DELIMITER ;

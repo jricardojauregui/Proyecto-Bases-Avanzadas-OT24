@@ -176,13 +176,3 @@ CREATE TABLE seguimiento_pedidos (
     FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido)
 );
 
-
---wish list
-CREATE TABLE wish_list (
-    id_wish_list INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    id_usr INT NOT NULL,
-    id_producto INT NOT NULL,
-    fecha_agregado DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_usr) REFERENCES usuarios(id_usr),
-    FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
-);

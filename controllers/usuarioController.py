@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from models.usuario import login_user, register_user, update_user, confirm_purchase, add_to_cart
+from models.usuario import login_user, register_user, update_user, confirm_purchase, add_to_cart, usr_order_history
 import hashlib
 
 ### HACER loginU, registerU, logoutU, compra
@@ -133,4 +133,18 @@ def confirm_cart_purchase():
             flash(message, "error")
             return redirect(url_for('carrito')) ## checar esto
 
+def order_history():
+    if request.method == 'POST':
+        id_usr = session.get('id_usr')  
 
+        if not id_usr:
+            flash("Debes iniciar sesión para ver tu historial de pedidos.", "error")
+            return redirect(url_for('login')) ### checar esto
+
+        orders = usr_order_history(id_usr)
+
+        if not orders:
+            flash("No tienes pedidos registrados en tu historial.", "info")
+            return render_template('order_history.html', orders=[]) ### checar este template
+
+        return render_template('order_history.html', orders=orders) ### checar este template
