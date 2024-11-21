@@ -25,13 +25,11 @@ class Usuario:
         try:
             cur.execute('SELECT * FROM usuarios WHERE username = %s AND clave = %s', (username, hashed_password))
             user = cur.fetchone()  
-            
             if user:
-                stored_password = user['clave']  
+                stored_password = user['clave']
                 print(f"Contraseña ingresada (hash): {hashed_password}")
                 print(f"Contraseña almacenada: {stored_password}")
-                
-                if stored_password == hashed_password:  
+                if stored_password == hashed_password:
                     return user
         except MySQLdb.Error as e:
             return False, str(e)
@@ -45,7 +43,6 @@ class Usuario:
             cur.callproc('InsertUsuario', [username, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario])
             mysql.connection.commit()
             return True, 'Registro exitoso.'
-        
         except MySQLdb.exceptions.OperationalError as e:
             return False, str(e)
         finally:
@@ -56,10 +53,8 @@ class Usuario:
         try:
             cur.execute('SELECT * FROM usuarios WHERE id_usr = %s', (id_usr,))
             current_user = cur.fetchone()
-
             if not current_user:
                 return False, "Usuario no encontrado."
-
             username = username or current_user['username']
             clave = clave or current_user['clave']
             nom_usr = nom_usr or current_user['nom_usr']
@@ -69,11 +64,9 @@ class Usuario:
             tel_domicilio = tel_domicilio or current_user['tel_domicilio']
             direccion = direccion or current_user['direccion']
             foto_usuario = foto_usuario or current_user['foto_usuario']
-
             cur.callproc('UpdateUsuario', [id_usr, username, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario])
-            mysql.connection.commit()  
+            mysql.connection.commit()
             return True, "Usuario actualizado correctamente."
-        
         except MySQLdb.Error as e:
             return False, str(e)
         finally:
@@ -85,7 +78,6 @@ class Usuario:
             cur.callproc('anadirCarrito', [id_usr, id_producto, cantidad])
             mysql.connection.commit()
             return True, "Producto agregado al carrito."
-        
         except MySQLdb.Error as e:
             return False, str(e)
         finally:
@@ -97,7 +89,6 @@ class Usuario:
             cur.callproc('MostrarCarritoDeUsuario', [id_usr])
             cart = cur.fetchall()
             return cart
-        
         except MySQLdb.Error as e:
             return False, str(e)
         finally:
@@ -109,7 +100,6 @@ class Usuario:
             cur.callproc('QuitarTodoCarrito', [id_usr])
             mysql.connection.commit()
             return True, "Carrito vaciado exitosamente."
-        
         except MySQLdb.Error as e:
             return False, str(e)
         finally:
@@ -121,12 +111,10 @@ class Usuario:
             cur.callproc('QuitarProductoCarrito', [id_usr, id_producto])
             mysql.connection.commit()
             return True, "Producto eliminado del carrito."
-        
         except MySQLdb.Error as e:
             return False, str(e)
         finally:
             cur.close()
-
 
     def get_user_cards(id_usr):
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -134,12 +122,10 @@ class Usuario:
             cur.callproc('verTarjetasUsuario', [id_usr])
             tarjetas = cur.fetchall()
             return tarjetas
-        
         except MySQLdb.Error as e:
             return False, str(e)
         finally:
             cur.close()
-
 
     def confirm_purchase(id_usr, tarjeta_usr):
         cur = mysql.connection.cursor()
@@ -147,12 +133,10 @@ class Usuario:
             cur.callproc('ConfirmarCompra', [id_usr, tarjeta_usr])
             mysql.connection.commit()
             return True, "Compra confirmada exitosamente."
-        
         except MySQLdb.Error as e:
             return False, str(e)
         finally:
             cur.close()
-
 
     def usr_order_history(id_usr):
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -160,7 +144,6 @@ class Usuario:
             cur.callproc('HistorialPedidosPorUsuario', [id_usr])
             orders = cur.fetchall()
             return orders
-        
         except MySQLdb.Error as e:
             return False, str(e)
         finally:
@@ -172,9 +155,37 @@ class Usuario:
             cur.callproc('MostrarWishList', [id_usr])
             wishlist = cur.fetchall()
             return wishlist
-        
         except MySQLdb.Error as e:
             return False, str(e)
         finally:
             cur.close()
 
+def validate_user_credentials(username, password):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        hashed_password = hashlib.sha256(password.encode()).hexdigest() 
+        cur.execute(
+            "SELECT id_usr FROM usuarios WHERE username = %s AND clave = %s",
+            (username, hashed_password)
+        )
+        user = cur.fetchone()
+        if not user:
+            return None 
+        id_usr = user['id_usr']
+        cur.callproc('VerificarUsuario', [id_usr])
+        return id_usr 
+    except MySQLdb.Error as e:
+            return False, str(e)
+    finally:
+        cur.close()
+
+def delete_user_account(id_usr):
+    cur = mysql.connection.cursor()
+    try:
+        cur.callproc('DeleteUsuario', [id_usr])  
+        mysql.connection.commit()
+        return True, "Cuenta eliminada exitosamente."
+    except MySQLdb.Error as e:
+        return False, str(e)
+    finally:
+        cur.close()

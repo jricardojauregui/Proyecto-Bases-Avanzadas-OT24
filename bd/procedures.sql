@@ -658,3 +658,21 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE VerificarUsuario(
+    IN p_id_usr INT
+)
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM usuarios
+        WHERE id_usr = p_id_usr
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'El usuario no existe.';
+    END IF;
+END //
+
+DELIMITER ;

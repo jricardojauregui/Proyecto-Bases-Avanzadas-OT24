@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from models.usuario import login_user, register_user, update_user, confirm_purchase, get_user_cart, add_to_cart, usr_order_history, get_cart_items, remove_from_cart, clear_cart, confirm_purchase, get_user_cards, get_wishlist
+from models.usuario import login_user, register_user, update_user, confirm_purchase, get_user_cart, add_to_cart, usr_order_history, remove_from_cart, clear_cart, confirm_purchase, get_user_cards, get_wishlist, validate_user_credentials, delete_user_account
 import hashlib
 
 ### HACER loginU, registerU, logoutU, compra
@@ -21,7 +21,7 @@ def loginU():
             session['loggedin'] = True
             session['usuario'] = user['username']  
             flash('Acceso exitoso', 'success')
-            return redirect(url_for('vista_principal')) ### checar esto
+            return redirect(url_for('inicio')) ### checar esto
         else:
             flash('Usuario o contraseña incorrectos, intenta nuevamente.', 'error')
     
@@ -81,7 +81,7 @@ def updateU():
             return redirect(url_for('perfil'))  # checar esto
         else:
             flash(message, 'error')
-            return redirect(url_for('editar_perfil')) ### checar tambien esto
+            return redirect(url_for('update')) ### checar tambien esto
     
     return render_template('editar_perfil.html')  # checar esto
 
@@ -89,6 +89,31 @@ def logoutU():
     session.clear()  
     flash('Has cerrado sesión correctamente.', 'success')  
     return redirect(url_for('inicio'))  ### checar esto
+
+def delete_account():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        if not username or not password:
+            flash("Por favor, proporciona tu nombre de usuario y contraseña.", "error")
+            return redirect(url_for('delete_account'))
+
+        user_id = validate_user_credentials(username, password)
+        if not user_id:
+            flash("Nombre de usuario o contraseña incorrectos, o el usuario no existe.", "error")
+            return redirect(url_for('delete_account'))
+
+        success, message = delete_user_account(user_id)
+        if success:
+            session.clear()  
+            flash(message, "success")
+            return redirect(url_for('inicio'))  
+        else:
+            flash(message, "error")
+            return redirect(url_for('delete_account'))  
+
+    return render_template('delete_account.html')
 
 def view_and_manage_cart():
     id_usr = session.get('id_usr') 
@@ -119,7 +144,7 @@ def view_and_manage_cart():
             flash(message, "success" if success else "error")
             return redirect(url_for('perfil'))    ### checar esto
 
-    cart_items = get_cart_items(id_usr)
+    cart_items = get_user_cart(id_usr)
     user_cards = get_user_cards(id_usr)
 
     if not cart_items:
