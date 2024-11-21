@@ -599,3 +599,59 @@ BEGIN
 END //
 
 DELIMITER ;
+
+--crear categorias
+
+DELIMITER //
+CREATE PROCEDURE CrearCategoria(
+    IN p_nombre_categoria VARCHAR(100),
+    IN p_desc_categoria TEXT
+)
+BEGIN
+    INSERT INTO categorias (categoria, desc_categorias) VALUES (p_nombre_categoria, p_desc_categoria);
+END //
+DELIMITER ;
+
+--borrar categorias
+
+DELIMITER //
+CREATE PROCEDURE BorrarCategoria(
+    IN p_id_categoria INT
+)
+BEGIN
+    DELETE FROM categorias WHERE id_categoria = p_id_categoria;
+END //
+
+DELIMITER ;
+
+-- mostrar wishlist
+
+DELIMITER //
+
+CREATE PROCEDURE MostrarWishList(
+    IN p_id_usr INT
+)
+BEGIN
+    SELECT wl.id_producto, p.nom_producto, p.desc_producto, p.precio, p.empresa_nom FROM wish_list wl INNER JOIN productos p ON wl.id_producto = p.id_producto WHERE wl.id_usr = p_id_usr;
+END //
+
+DELIMITER ;
+
+-- cancelar pedido
+
+DELIMITER //
+
+CREATE PROCEDURE CancelarPedido(
+    IN p_id_pedido INT
+)
+BEGIN
+    DECLARE p_estado_pedido VARCHAR(50);
+    SELECT estado_pedido INTO p_estado_pedido FROM pedidos WHERE id_pedido = p_id_pedido;
+    IF p_estado_pedido = 'En proceso' THEN
+        UPDATE pedidos SET estado_pedido = 'Cancelado' WHERE id_pedido = p_id_pedido;
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El pedido no se puede cancelar porque ya se entrego.';
+    END IF;
+END //
+
+DELIMITER ;

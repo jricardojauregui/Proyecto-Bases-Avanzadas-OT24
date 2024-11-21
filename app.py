@@ -3,7 +3,7 @@ from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
 from database import mysql, init_app
 
 from controllers.adminController import loginAdmin, logoutAdmin, mostrarEmpresas, editarEmpresas, eliminarEmpresas
-from controllers.usuarioController import loginU, registerU, updateU, logoutU, view_and_manage_cart, order_history
+from controllers.usuarioController import loginU, registerU, updateU, logoutU, view_and_manage_cart, order_history, view_wishlist
 
 app = Flask(__name__)
 
@@ -29,10 +29,12 @@ app.add_url_rule('/eliminarEmpresas/<int:id>', view_func=eliminarEmpresas, metho
 
 ### RUTAS USUARIO
 app.add_url_rule('/login', view_func=loginU, methods=['GET', 'POST'])
-app.add_url_rule('/registrar', view_func=registerU, methods=['GET', 'POST'])
+app.add_url_rule('/register', view_func=registerU, methods=['GET', 'POST'])
 app.add_url_rule('/update', view_func=updateU, methods=['GET', 'POST'])
 app.add_url_rule('/logout', view_func=logoutU)
-app.add_url_rule('/carrito', view_func=view_and_manage_cart, methods=['GET', 'POST'])
-app.add_url_rule('/historialDeCompras', view_func=order_history, methods=['POST'])
+app.add_url_rule('/cart', view_func=view_and_manage_cart, methods=['GET', 'POST'])
+app.add_url_rule('/orderHistory', view_func=order_history, methods=['GET', 'POST'])
+app.add_url_rule('/wishlist', view_func=view_wishlist, methods=['POST'])
+
 
 

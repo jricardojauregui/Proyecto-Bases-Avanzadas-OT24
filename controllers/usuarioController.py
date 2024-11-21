@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from models.usuario import login_user, register_user, update_user, confirm_purchase, get_cart, add_to_cart, usr_order_history, get_cart_items, remove_from_cart, clear_cart, confirm_purchase, get_user_cards
+from models.usuario import login_user, register_user, update_user, confirm_purchase, get_user_cart, add_to_cart, usr_order_history, get_cart_items, remove_from_cart, clear_cart, confirm_purchase, get_user_cards, get_wishlist
 import hashlib
 
 ### HACER loginU, registerU, logoutU, compra
@@ -165,3 +165,18 @@ def order_history():
             return render_template('order_history.html', orders=[]) ### checar este template
 
         return render_template('order_history.html', orders=orders) ### checar este template
+    
+def view_wishlist():
+    if request.method == 'POST':
+        id_usr = session.get('id_usr')  
+
+        if not id_usr:
+            flash("Debes iniciar sesión para ver tu lista de deseos.", "error")
+            return redirect(url_for('login'))  
+
+        wishlist_items = get_wishlist(id_usr)
+
+        if not wishlist_items:
+            flash("Tu lista de deseos está vacía.", "info")
+
+        return render_template('wishlist.html', wishlist_items=wishlist_items)

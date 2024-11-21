@@ -91,7 +91,7 @@ class Usuario:
         finally:
             cur.close()
 
-    def get_cart(id_usr):
+    def get_user_cart(id_usr):
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         try:
             cur.callproc('MostrarCarritoDeUsuario', [id_usr])
@@ -165,3 +165,16 @@ class Usuario:
             return False, str(e)
         finally:
             cur.close()
+
+    def get_wishlist(id_usr):
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        try:
+            cur.callproc('MostrarWishList', [id_usr])
+            wishlist = cur.fetchall()
+            return wishlist
+        
+        except MySQLdb.Error as e:
+            return False, str(e)
+        finally:
+            cur.close()
+
