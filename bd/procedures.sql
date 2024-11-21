@@ -1,4 +1,4 @@
--- inserta usuario
+--inserta usuario
 
 DELIMITER //
 CREATE PROCEDURE InsertUsuario(
@@ -23,6 +23,7 @@ END //
 DELIMITER ;
 
 -- Actualizar un usuario 
+
 DELIMITER //
 CREATE PROCEDURE UpdateUsuario(
     IN p_username VARCHAR(100),
@@ -38,7 +39,7 @@ CREATE PROCEDURE UpdateUsuario(
 BEGIN
     UPDATE usuarios
     SET 
-        username = p_username
+        username = p_username,
         clave = p_clave,
         nom_usr = p_nom_usr,
         apellido_usr = p_apellido_usr,
@@ -53,6 +54,7 @@ END //
 DELIMITER ;
 
 -- delete usuario
+
 DELIMITER //
 CREATE PROCEDURE DeleteUsuario(
     IN p_id_usr INT
@@ -64,6 +66,7 @@ END //
 DELIMITER ;
 
 -- Mostrar todos los usuarios
+
 DELIMITER //
 CREATE PROCEDURE MostrarUsuarios()
 BEGIN
@@ -75,6 +78,7 @@ END //
 DELIMITER ;
 
 -- Mostrar un usuario por ID
+
 DELIMITER //
 CREATE PROCEDURE MostrarUsuarioPorID(
     IN p_id_usr INT
@@ -103,6 +107,7 @@ BEGIN
         nom_usr = p_nombre_usr;
 END //
 DELIMITER ;
+
 
 --confirma compra en carrito
 
@@ -148,14 +153,18 @@ END //
 
 DELIMITER ;
 
--- Mostrar productos por catgoria
-
 DELIMITER //
 
-CREATE PROCEDURE MostrarProductosPorCategoria(IN p_nombre_categoria VARCHAR(100))
+CREATE PROCEDURE anadirCarrito(
+    IN p_id_usr INT,
+    IN p_id_producto INT,
+    IN p_cantidad INT
+)
 BEGIN
-    SELECT * FROM productos p INNER JOIN productos_categorias pc ON p.id_producto = pc.id_producto INNER JOIN categorias c ON pc.id_categoria = c.id_categoria WHERE c.categoria = p_nombre_categoria;
+    INSERT INTO carrito_compras (id_usr, id_producto, cantidad, precio_unitario) SELECT p_id_usr, p_id_producto p_cantidad, precio FROM productos WHERE id_producto = p_id_producto;
 END //
 
 DELIMITER ;
+
+
 

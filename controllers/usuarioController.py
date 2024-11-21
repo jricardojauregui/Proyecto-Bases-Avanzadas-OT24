@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from models.usuario import Usuario, login_user, register_user, update_user
+from models.usuario import login_user, register_user, update_user, confirm_purchase, add_to_cart
 import hashlib
 
 ### HACER loginU, registerU, logoutU, compra
@@ -90,6 +90,47 @@ def logoutU():
     flash('Has cerrado sesión correctamente.', 'success')  
     return redirect(url_for('inicio'))  ### checar esto
 
+def add_product_to_cart():
+    if request.method == 'POST':
+        id_usr = session.get('id_usr')  
+        if not id_usr:
+            flash("Debes iniciar sesión para agregar productos al carrito.", "error")
+            return redirect(url_for('login')) ## checar esto
+        
+        id_producto = request.form.get('product_id')
+        cantidad = int(request.form.get('quantity', 1)) 
 
+        if not id_producto:
+            flash("Faltan datos para agregar al carrito.", "error")
+            return redirect(url_for('carrito')) ## checar esto
+
+        success, message = add_to_cart(id_usr, id_producto, cantidad)
+
+        if success:
+            flash(message, "success")
+        else:
+            flash(message, "error")
+        return redirect(url_for('carrito')) ## checar esto
+
+def confirm_cart_purchase():
+    if request.method == 'POST':
+        id_usr = session.get('id_usr') 
+        if not id_usr:
+            flash("Debes iniciar sesión para confirmar la compra.", "error")
+            return redirect(url_for('login'))  
+        
+        tarjeta_usr = request.form.get('card_number')  
+        
+        if not tarjeta_usr:
+            flash("Faltan datos de la tarjeta para confirmar la compra.", "error")
+            return redirect(url_for('carrito')) ## checar esto
+
+        success, message = confirm_purchase(id_usr, tarjeta_usr)
+        if success:
+            flash(message, "success")
+            return redirect(url_for('perfil')) ### checar esto
+        else:
+            flash(message, "error")
+            return redirect(url_for('carrito')) ## checar esto
 
 

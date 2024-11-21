@@ -78,3 +78,27 @@ class Usuario:
             return False, str(e)
         finally:
             cur.close()
+
+    def add_to_cart(id_usr, id_producto, cantidad):
+        cur = mysql.connection.cursor()
+        try:
+            cur.callproc('anadirCarrito', [id_usr, id_producto, cantidad])
+
+            mysql.connection.commit()
+            return True, "Producto agregado al carrito."
+        except MySQLdb.Error as e:
+            return False, str(e)
+        finally:
+            cur.close()
+
+
+    def confirm_purchase(id_usr, tarjeta_usr):
+        cur = mysql.connection.cursor()
+        try:
+            cur.callproc('ConfirmarCompra', [id_usr, tarjeta_usr])
+            mysql.connection.commit()
+            return True, "Compra confirmada exitosamente."
+        except MySQLdb.Error as e:
+            return False, str(e)
+        finally:
+            cur.close()
