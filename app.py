@@ -34,7 +34,7 @@ app.add_url_rule('/update', view_func=updateU, methods=['GET', 'POST'])
 app.add_url_rule('/logout', view_func=logoutU)
 app.add_url_rule('/cart', view_func=view_and_manage_cart, methods=['GET', 'POST'])
 app.add_url_rule('/orderHistory', view_func=order_history, methods=['GET', 'POST'])
-app.add_url_rule('/wishlist', view_func=view_wishlist, methods=['POST'])
+app.add_url_rule('/wishlist', view_func=view_wishlist, methods=['GET', 'POST'])
 
 
 
