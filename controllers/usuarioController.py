@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from models.usuario import login_user, register_user, update_user, confirm_purchase, get_user_cart, add_to_cart, usr_order_history, remove_from_cart, clear_cart, confirm_purchase, get_user_cards, get_wishlist, validate_user_credentials, delete_user_account
+from models.usuario import login_user, register_user, update_user, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, validate_user_credentials, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category
 import hashlib
 
 ### HACER loginU, registerU, logoutU, compra
@@ -153,43 +153,70 @@ def view_and_manage_cart():
     return render_template('cart.html', cart_items=cart_items, user_cards=user_cards)  ### checar esto
 
 
-def add_product_to_cart():
+def producto(id_producto):
+    id_usr = session.get('id_usr')  
+
+    product_info = get_product_info(id_producto)
+    ratings = get_product_ratings(id_producto)
+    category = get_product_category(id_producto)
+
+    if not id_usr:
+        return render_template('producto.html', product=product_info, category=category, ratings=ratings, wishlist_status=None, tarjetas=None, last_purchase_date=None)
+
     if request.method == 'POST':
-        id_usr = session.get('id_usr')  
-        if not id_usr:
-            flash("Debes iniciar sesión para agregar productos al carrito.", "error")
-            return redirect(url_for('login')) ## checar esto
-        
-        id_producto = request.form.get('product_id')
-        cantidad = int(request.form.get('cantidad', 1)) 
+        if 'add_to_cart' in request.form:
+            cantidad = int(request.form.get('cantidad', 1))
+            success, message = add_to_cart(id_usr, id_producto, cantidad)
+            flash(message, "success" if success else "error")
 
-        if not id_producto:
-            flash("Faltan datos para agregar al carrito.", "error")
-            return redirect(url_for('carrito')) ## checar esto
+        elif 'confirm_purchase' in request.form:
+            tarjeta_usr = request.form.get('tarjeta_usr')
+            if not tarjeta_usr:
+                flash("Selecciona una tarjeta para confirmar la compra.", "error")
+            else:
+                success, message = direct_purchase(id_usr, id_producto, 1, tarjeta_usr)
+                flash(message, "success" if success else "error")
 
-        success, message = add_to_cart(id_usr, id_producto, cantidad)
+        elif 'toggle_wishlist' in request.form:
+            success, message = toggle_wishlist(id_usr, id_producto)
+            flash(message, "success" if success else "error")
 
-        if success:
-            flash(message, "success")
-        else:
-            flash(message, "error")
-        return redirect(url_for('carrito')) ## checar esto
+        elif 'submit_rating' in request.form:
+            calificacion = int(request.form.get('calificacion'))
+            comentario = request.form.get('comentario')
+            success, message = submit_rating(id_usr, id_producto, calificacion, comentario)
+            flash(message, "success" if success else "error")
+
+        return redirect(url_for('producto', id_producto=id_producto))
+
+    wishlist_status = get_wishlist_status(id_usr, id_producto)
+    tarjetas = get_user_cards(id_usr)
+    last_purchase_date = get_last_purchase_date(id_usr, id_producto)
+
+    return render_template('producto.html', product=product_info, category=category, ratings=ratings, wishlist_status=wishlist_status, tarjetas=tarjetas, last_purchase_date=last_purchase_date)
+
+
 
 def order_history():
+    if not session.get('id_usr'):
+        flash("Debes iniciar sesión para ver tu historial de pedidos.", "error")
+        return redirect(url_for('login'))  ## checar esto
+
+    id_usr = session['id_usr']
+
     if request.method == 'POST':
-        id_usr = session.get('id_usr')  
+        if 'id_pedido' in request.form:
+            id_pedido = request.form.get('id_pedido')
+            success, message = cancel_order(id_pedido)
+            flash(message, "success" if success else "error")
+            return redirect(url_for('order_history'))   ## checar esto
 
-        if not id_usr:
-            flash("Debes iniciar sesión para ver tu historial de pedidos.", "error")
-            return redirect(url_for('login')) ### checar esto
+    orders = usr_order_history(id_usr)
 
-        orders = usr_order_history(id_usr)
+    pending_orders = [order for order in orders if order['estado_pedido'] == 'En proceso']
+    completed_orders = [order for order in orders if order['estado_pedido'] == 'Completado']
 
-        if not orders:
-            flash("No tienes pedidos registrados en tu historial.", "info")
-            return render_template('order_history.html', orders=[]) ### checar este template
-
-        return render_template('order_history.html', orders=orders) ### checar este template
+    return render_template('order_history.html', pending_orders=pending_orders, completed_orders=completed_orders) ## checar esto
     
 def view_wishlist():
     if request.method == 'POST':

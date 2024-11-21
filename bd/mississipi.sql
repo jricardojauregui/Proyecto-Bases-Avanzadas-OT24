@@ -1,7 +1,7 @@
 -- Tabla de Usuarios
 CREATE TABLE usuarios (
     id_usr INT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
-    username varchar(100) NOT NULL,
+    username VARCHAR(100) NOT NULL,
     clave VARCHAR(100) NOT NULL,
     nom_usr VARCHAR(100) NOT NULL,
     apellido_usr VARCHAR(100) NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE productos_categorias (
 CREATE TABLE pedidos (
     id_pedido INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     fecha_pedido DATE NOT NULL,
-    estado_pedido VARCHAR(50) NOT NULL,
+    estado_pedido VARCHAR(50) NOT NULL DEFAULT 'En proceso',
     id_usr INT NOT NULL,
     tarjeta_usr VARCHAR(100) NOT NULL, 
     FOREIGN KEY (id_usr, tarjeta_usr) REFERENCES tarjetas(id_usr, tarjeta_usr)
@@ -166,13 +166,3 @@ CREATE TABLE historial_compras (
     FOREIGN KEY (id_usr) REFERENCES usuarios(id_usr),
     FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
 );
-
--- Seguimiento de Pedidos
-CREATE TABLE seguimiento_pedidos (
-    id_seguimiento INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    id_pedido INT NOT NULL,
-    estado_actual VARCHAR(50) NOT NULL,
-    fecha_estado DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido)
-);
-

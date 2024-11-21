@@ -143,7 +143,7 @@ DELIMITER ;
 
 DELIMITER //
 
-CREATE PROCEDURE añadirCarrito(
+CREATE PROCEDURE anadirCarrito(
     IN p_id_usr INT,
     IN p_id_producto INT,
     IN p_cantidad INT
@@ -451,7 +451,7 @@ DELIMITER ;
 --añadir producto a wish list
 
 DELIMITER //
-CREATE PROCEDURE AñadirProductoWishList(
+CREATE PROCEDURE AnadirProductoWishList(
     IN p_id_usr INT,
     IN p_id_producto INT
 )
@@ -502,7 +502,7 @@ DELIMITER ;
 
 DELIMITER //
 
-CREATE PROCEDURE AñadirTarjeta(
+CREATE PROCEDURE AnadirTarjeta(
     IN p_id_usr INT,
     IN p_tarjeta_usr VARCHAR(100),
     IN p_id_banco INT,
@@ -673,6 +673,62 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'El usuario no existe.';
     END IF;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE ToggleProductoWishList(
+    IN id_usr INT,
+    IN id_producto INT
+)
+BEGIN
+    DECLARE existe INT;
+
+    SELECT COUNT(*) INTO existe
+    FROM wishlist
+    WHERE id_usuario = id_usr AND id_producto = id_producto;
+
+    IF existe > 0 THEN
+        DELETE FROM wishlist
+        WHERE id_usuario = id_usr AND id_producto = id_producto;
+    ELSE
+        INSERT INTO wishlist (id_usuario, id_producto)
+        VALUES (id_usr, id_producto);
+    END IF;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE UltimaCompra(
+    IN id_usr INT,
+    IN id_producto INT
+)
+BEGIN
+    SELECT MAX(p.fecha_pedido) AS last_purchase_date
+    FROM pedidos p
+    INNER JOIN detalle_pedidos dp ON p.id_pedido = dp.id_pedido
+    WHERE p.id_usr = id_usr 
+      AND dp.id_producto = id_producto 
+      AND p.estado_pedido != 'Cancelado';
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE productoCategoria(
+    IN id_producto INT
+)
+BEGIN
+    SELECT c.categoria
+    FROM productos p
+    INNER JOIN productos_categorias pc ON p.id_producto = pc.id_producto
+    INNER JOIN categorias c ON pc.id_categoria = c.id_categoria
+    WHERE p.id_producto = id_producto;
 END //
 
 DELIMITER ;
