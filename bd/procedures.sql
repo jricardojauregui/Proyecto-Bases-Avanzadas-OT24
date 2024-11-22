@@ -761,3 +761,33 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE todosProductos()
+BEGIN
+    SELECT 
+        id_producto, 
+        nom_producto, 
+        precio, 
+        foto_producto 
+    FROM productos;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE productosPorCategoria(
+    IN p_id_categoria INT
+)
+BEGIN
+    SELECT 
+        p.id_producto, p.nom_producto, p.precio, p.foto_producto
+    FROM 
+        productos p
+    INNER JOIN 
+        productos_categorias pc ON p.id_producto = pc.id_producto
+    WHERE 
+        pc.id_categoria = p_id_categoria;
+END //
+DELIMITER ;

@@ -163,6 +163,29 @@ class Usuario:
             return None
         finally:
             cur.close()
+    
+    def get_all_products():
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        try:
+            cur.callproc('todosProductos')
+            products = cur.fetchall()
+            return products
+        except MySQLdb.Error as e:
+            print(f"Error al obtener los productos: {e}")
+            return []
+        finally:
+            cur.close()
+
+    def get_products_by_category(id_categoria):
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        try:
+            cur.callproc('productosPorCategoria', [id_categoria])
+            return cur.fetchall()
+        except MySQLdb.Error as e:
+            print(f"Error al obtener productos por categoría: {e}")
+            return []
+        finally:
+            cur.close()
 
     def get_product_category(id_producto):
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)

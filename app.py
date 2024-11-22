@@ -3,7 +3,7 @@ from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
 from database import mysql, init_app
 
 from controllers.adminController import loginAdmin, logoutAdmin, mostrarEmpresas, editarEmpresas, eliminarEmpresas
-from controllers.usuarioController import loginU, registerU, updateU, logoutU, delete_account, view_and_manage_cart, order_history, view_wishlist, producto
+from controllers.usuarioController import loginU, registerU, updateU, logoutU, delete_account, view_and_manage_cart, order_history, view_wishlist, producto, productos, productos_por_categoria
 
 app = Flask(__name__)
 
@@ -37,7 +37,5 @@ app.add_url_rule('/cart', view_func=view_and_manage_cart, methods=['GET', 'POST'
 app.add_url_rule('/orderHistory', view_func=order_history, methods=['GET', 'POST'])
 app.add_url_rule('/wishlist', view_func=view_wishlist, methods=['GET', 'POST'])
 app.add_url_rule('/product/<int:id_producto>', view_func=producto, methods=['GET', 'POST'])
-
-
-
-
+app.add_url_rule('/productos', view_func=productos, methods=['GET'])
+app.add_url_rule('/productos/categoria/<int:id_categoria>', view_func=productos_por_categoria, methods=['GET'])

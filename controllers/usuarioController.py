@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from models.usuario import login_user, register_user, update_user, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, validate_user_credentials, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category
+from models.usuario import login_user, register_user, update_user, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, validate_user_credentials, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category, get_all_products, get_products_by_category
 import hashlib
 
 ### HACER loginU, registerU, logoutU, compra
@@ -195,7 +195,19 @@ def producto(id_producto):
 
     return render_template('producto.html', product=product_info, category=category, ratings=ratings, wishlist_status=wishlist_status, tarjetas=tarjetas, last_purchase_date=last_purchase_date)
 
+def productos():
+    all_products = get_all_products()
+    return render_template('productos.html', productos=all_products)
 
+def productos_por_categoria(id_categoria):
+    productos = get_products_by_category(id_categoria)
+    categoria = get_product_category(id_categoria)  
+
+    if not categoria:
+        flash("Categoría no encontrada.", "error")
+        return redirect(url_for('productos'))  # Redirigir a la lista general de productos
+
+    return render_template('productos_categoria.html', productos=productos, categoria=categoria)
 
 def order_history():
     if not session.get('id_usr'):
