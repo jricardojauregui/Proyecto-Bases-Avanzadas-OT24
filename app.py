@@ -37,5 +37,5 @@ app.add_url_rule('/cart', view_func=view_and_manage_cart, methods=['GET', 'POST'
 app.add_url_rule('/orderHistory', view_func=order_history, methods=['GET', 'POST'])
 app.add_url_rule('/wishlist', view_func=view_wishlist, methods=['GET', 'POST'])
 app.add_url_rule('/product/<int:id_producto>', view_func=producto, methods=['GET', 'POST'])
-app.add_url_rule('/productos', view_func=productos, methods=['GET'])
-app.add_url_rule('/productos/categoria/<int:id_categoria>', view_func=productos_por_categoria, methods=['GET'])
+app.add_url_rule('/products', view_func=productos, methods=['GET'])
+app.add_url_rule('/products/category/<int:id_categoria>', view_func=productos_por_categoria, methods=['GET'])

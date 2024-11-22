@@ -205,8 +205,8 @@ def productos_por_categoria(id_categoria):
 
     if not categoria:
         flash("Categoría no encontrada.", "error")
-        return redirect(url_for('productos'))  # Redirigir a la lista general de productos
-
+        return redirect(url_for('products')) 
+    
     return render_template('productos_categoria.html', productos=productos, categoria=categoria)
 
 def order_history():
