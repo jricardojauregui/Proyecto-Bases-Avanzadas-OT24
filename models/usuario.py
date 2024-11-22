@@ -288,29 +288,29 @@ class Usuario:
         finally:
             cur.close()
 
-def validate_user_credentials(username, password):
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    try:
-        hashed_password = hashlib.sha256(password.encode()).hexdigest() 
-        cur.callproc('autenticarUser', [username, hashed_password])
-        user = cur.fetchone()
-        if not user:
-            return None 
-        id_usr = user['id_usr']
-        cur.callproc('VerificarUsuario', [id_usr])
-        return id_usr 
-    except MySQLdb.Error as e:
-            return False, str(e)
-    finally:
-        cur.close()
+    def validate_user_credentials(username, password):
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        try:
+            hashed_password = hashlib.sha256(password.encode()).hexdigest() 
+            cur.callproc('autenticarUser', [username, hashed_password])
+            user = cur.fetchone()
+            if not user:
+                return None 
+            id_usr = user['id_usr']
+            cur.callproc('VerificarUsuario', [id_usr])
+            return id_usr 
+        except MySQLdb.Error as e:
+                return False, str(e)
+        finally:
+            cur.close()
 
-def delete_user_account(id_usr):
-    cur = mysql.connection.cursor()
-    try:
-        cur.callproc('DeleteUsuario', [id_usr])  
-        mysql.connection.commit()
-        return True, "Cuenta eliminada exitosamente."
-    except MySQLdb.Error as e:
-        return False, str(e)
-    finally:
-        cur.close()
+    def delete_user_account(id_usr):
+        cur = mysql.connection.cursor()
+        try:
+            cur.callproc('DeleteUsuario', [id_usr])  
+            mysql.connection.commit()
+            return True, "Cuenta eliminada exitosamente."
+        except MySQLdb.Error as e:
+            return False, str(e)
+        finally:
+            cur.close()
