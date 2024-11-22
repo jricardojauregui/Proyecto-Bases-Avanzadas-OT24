@@ -76,7 +76,7 @@ def user_update():
 
         if success:
             flash(message, 'success')
-            return redirect(url_for('perfil'))  # checar esto
+            return redirect(url_for('profile'))  # checar esto
         else:
             flash(message, 'error')
             return redirect(url_for('update')) ### checar tambien esto
