@@ -1,10 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from models.usuario import login_user, register_user, update_user, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, validate_user_credentials, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category, get_all_products, get_products_by_category
+from models.usuario import login_user, register_user, update_user, get_user_profile, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, validate_user_credentials, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category, get_all_products, get_products_by_category
 import hashlib
 
-### HACER loginU, registerU, logoutU, compra
-
-def loginU():
+def user_login():
     if request.method == 'POST':
         username = request.form.get('username')  
         password = request.form.get('clave')  
@@ -27,7 +25,7 @@ def loginU():
     
     return render_template('login.html') ### checar html
 
-def registerU():
+def user_register():
     if request.method == 'POST':
         try:
             username = request.form['username']
@@ -54,7 +52,7 @@ def registerU():
             return redirect(url_for('register')) ### checar tambien esto
     return render_template('registro.html') ### Checar html si es el correcto
 
-def updateU():
+def user_update():
     if request.method == 'POST':
         id_usr = session.get('id_usr') 
 
@@ -85,12 +83,27 @@ def updateU():
     
     return render_template('editar_perfil.html')  # checar esto
 
-def logoutU():
+def user_profile():
+    id_usr = session.get('id_usr')  
+
+    if not id_usr:
+        flash("Debes iniciar sesión para ver tu perfil.", "error")
+        return redirect(url_for('login'))
+
+    user_profile = get_user_profile(id_usr)
+
+    if not user_profile:
+        flash("No se pudo cargar el perfil. Intenta nuevamente.", "error")
+        return redirect(url_for('logout'))
+
+    return render_template('perfil.html', user=user_profile)
+
+def user_logout():
     session.clear()  
     flash('Has cerrado sesión correctamente.', 'success')  
     return redirect(url_for('inicio'))  ### checar esto
 
-def delete_account():
+def user_delete_account():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -102,7 +115,7 @@ def delete_account():
         user_id = validate_user_credentials(username, password)
         if not user_id:
             flash("Nombre de usuario o contraseña incorrectos, o el usuario no existe.", "error")
-            return redirect(url_for('delete_account'))
+            return redirect(url_for('deleteAccount'))
 
         success, message = delete_user_account(user_id)
         if success:
@@ -111,11 +124,11 @@ def delete_account():
             return redirect(url_for('inicio'))  
         else:
             flash(message, "error")
-            return redirect(url_for('delete_account'))  
+            return redirect(url_for('deleteAccount'))  
 
     return render_template('delete_account.html')
 
-def view_and_manage_cart():
+def user_view_and_manage_cart():
     id_usr = session.get('id_usr') 
 
     if not id_usr:
@@ -142,7 +155,7 @@ def view_and_manage_cart():
 
             success, message = confirm_purchase(id_usr, card_number)
             flash(message, "success" if success else "error")
-            return redirect(url_for('perfil'))    ### checar esto
+            return redirect(url_for('profile'))    ### checar esto
 
     cart_items = get_user_cart(id_usr)
     user_cards = get_user_cards(id_usr)
@@ -153,7 +166,7 @@ def view_and_manage_cart():
     return render_template('cart.html', cart_items=cart_items, user_cards=user_cards)  ### checar esto
 
 
-def producto(id_producto):
+def user_view_product(id_producto):
     id_usr = session.get('id_usr')  
 
     product_info = get_product_info(id_producto)
@@ -187,7 +200,7 @@ def producto(id_producto):
             success, message = submit_rating(id_usr, id_producto, calificacion, comentario)
             flash(message, "success" if success else "error")
 
-        return redirect(url_for('producto', id_producto=id_producto))
+        return redirect(url_for('product', id_producto=id_producto))
 
     wishlist_status = get_wishlist_status(id_usr, id_producto)
     tarjetas = get_user_cards(id_usr)
@@ -195,11 +208,11 @@ def producto(id_producto):
 
     return render_template('producto.html', product=product_info, category=category, ratings=ratings, wishlist_status=wishlist_status, tarjetas=tarjetas, last_purchase_date=last_purchase_date)
 
-def productos():
+def user_view_all_products():
     all_products = get_all_products()
     return render_template('productos.html', productos=all_products)
 
-def productos_por_categoria(id_categoria):
+def user_view_products_by_category(id_categoria):
     productos = get_products_by_category(id_categoria)
     categoria = get_product_category(id_categoria)  
 
@@ -209,7 +222,7 @@ def productos_por_categoria(id_categoria):
     
     return render_template('productos_categoria.html', productos=productos, categoria=categoria)
 
-def order_history():
+def user_order_history():
     if not session.get('id_usr'):
         flash("Debes iniciar sesión para ver tu historial de pedidos.", "error")
         return redirect(url_for('login'))  ## checar esto
@@ -221,7 +234,7 @@ def order_history():
             id_pedido = request.form.get('id_pedido')
             success, message = cancel_order(id_pedido)
             flash(message, "success" if success else "error")
-            return redirect(url_for('order_history'))   ## checar esto
+            return redirect(url_for('orderHistory'))   ## checar esto
 
     orders = usr_order_history(id_usr)
 
@@ -230,7 +243,7 @@ def order_history():
 
     return render_template('order_history.html', pending_orders=pending_orders, completed_orders=completed_orders) ## checar esto
     
-def view_wishlist():
+def user_view_wishlist():
     if request.method == 'POST':
         id_usr = session.get('id_usr')  
 

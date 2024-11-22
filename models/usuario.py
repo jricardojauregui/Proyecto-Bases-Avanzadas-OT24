@@ -3,23 +3,7 @@ from flask import request
 import MySQLdb.cursors
 import hashlib
 
-class Usuario:
-    @staticmethod
-    def get_all():
-        cur = mysql.connection.cursor()
-        cur.callproc('MostrarUsuarios') 
-        usuarios = cur.fetchall()
-        cur.close()
-        return usuarios
-    
-    @staticmethod
-    def get_by_id(usuarios):
-        cur = mysql.connection.cursor()
-        cur.callproc('MostrarUsuarioPorID', (id_usr,)) 
-        usuarios = cur.fetchone()
-        cur.close()
-        return usuarios
-    
+class Usuario:  
     def login_user(username, hashed_password):
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         try:
@@ -71,6 +55,19 @@ class Usuario:
             return False, str(e)
         finally:
             cur.close()
+
+    def get_user_profile(id_usr):
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        try:
+            cur.callproc('MostrarUsuarioPorID', [id_usr])
+            result = cur.fetchone()
+            return result  
+        except MySQLdb.Error as e:
+            print(f"Error al obtener el perfil del usuario: {e}")
+            return None
+        finally:
+            cur.close()
+
 
     def get_product_info(id_producto):
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)

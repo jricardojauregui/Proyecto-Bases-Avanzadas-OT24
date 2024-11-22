@@ -3,8 +3,7 @@ from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
 from database import mysql, init_app
 
 from controllers.adminController import loginAdmin, logoutAdmin, mostrarEmpresas, editarEmpresas, eliminarEmpresas
-from controllers.usuarioController import loginU, registerU, updateU, logoutU, delete_account, view_and_manage_cart, order_history, view_wishlist, producto, productos, productos_por_categoria
-
+from controllers.usuarioController import user_login, user_register, user_update, user_logout, user_delete_account, user_profile, user_view_and_manage_cart, user_order_history, user_view_wishlist, user_view_product, user_view_all_products, user_view_products_by_category
 app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = MYSQL_HOST
@@ -28,14 +27,15 @@ app.add_url_rule('/editarEmpresas/<int:id>', view_func=editarEmpresas, methods=[
 app.add_url_rule('/eliminarEmpresas/<int:id>', view_func=eliminarEmpresas, methods=['GET', 'POST'])
 
 ### RUTAS USUARIO
-app.add_url_rule('/login', view_func=loginU, methods=['GET', 'POST'])
-app.add_url_rule('/register', view_func=registerU, methods=['GET', 'POST'])
-app.add_url_rule('/update', view_func=updateU, methods=['GET', 'POST'])
-app.add_url_rule('/logout', view_func=logoutU)
-app.add_url_rule('/deleteAccount', view_func=delete_account, methods=['GET', 'POST'])
-app.add_url_rule('/cart', view_func=view_and_manage_cart, methods=['GET', 'POST'])
-app.add_url_rule('/orderHistory', view_func=order_history, methods=['GET', 'POST'])
-app.add_url_rule('/wishlist', view_func=view_wishlist, methods=['GET', 'POST'])
-app.add_url_rule('/product/<int:id_producto>', view_func=producto, methods=['GET', 'POST'])
-app.add_url_rule('/products', view_func=productos, methods=['GET'])
-app.add_url_rule('/products/category/<int:id_categoria>', view_func=productos_por_categoria, methods=['GET'])
+app.add_url_rule('/login', view_func=user_login, methods=['GET', 'POST'])
+app.add_url_rule('/register', view_func=user_register, methods=['GET', 'POST'])
+app.add_url_rule('/update', view_func=user_update, methods=['GET', 'POST'])
+app.add_url_rule('/logout', view_func=user_logout)
+app.add_url_rule('/deleteAccount', view_func=user_delete_account, methods=['GET', 'POST'])
+app.add_url_rule('/perfil', view_func=user_profile, methods=['GET'])
+app.add_url_rule('/cart', view_func=user_view_and_manage_cart, methods=['GET', 'POST'])
+app.add_url_rule('/orderHistory', view_func=user_order_history, methods=['GET', 'POST'])
+app.add_url_rule('/wishlist', view_func=user_view_wishlist, methods=['GET', 'POST'])
+app.add_url_rule('/product/<int:id_producto>', view_func=user_view_product, methods=['GET', 'POST'])
+app.add_url_rule('/products', view_func=user_view_all_products, methods=['GET'])
+app.add_url_rule('/products/category/<int:id_categoria>', view_func=user_view_products_by_category, methods=['GET'])
