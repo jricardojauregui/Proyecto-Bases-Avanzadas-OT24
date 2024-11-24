@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ <title>Mississipi</title>
+ <link rel="stylesheet" href="{{url_for('static',filename='css/estilo.css')}}"/>
+ <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+  <!--INICIO DE MENU -->
+  <nav class= "menu-principal">
+  <ul>
+  <li style="margin-right: 20px;"><a href="/" style="color: white; text-decoration: none;">Inicio</a></li>
+  <li>
+  <form action="/buscar" method="get" class="buscador">
+        <input type="search" name="query" placeholder="Buscar..." required>
+        <button type="submit">Buscar</button>
+    </form>
+  </li>
+          <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn">Productos</button>
+            <div id="myDropdown" class="dropdown-content">
+                  <li><a href="/products/category/1">Electronicos</a></li>
+                  <li><a href="/products/category/2">Hogar</a></li>
+                  <li><a href="/products/category/3'">Ropa</a></li>
+                  <li><a href="/products/category/4'">Juguetes</a></li>
+                  <li><a href="/products/category/5">Deportes</a></li>
+          </div>
+        </div>
+        <li style="margin-right: 20px;">
+                <a href="/popular" style="color: white; text-decoration: none;">Popular</a>  
+              </li>
+              <li style="margin-right: 20px;">
+                      <a href="/lo-nuevo" style="color: white; text-decoration: none;">Lo nuevo</a>
+              </li>
+              <li style="float:right">
+                      <a href="/wishlist">
+                  <button style="font-size:24px"><i class="fa fa-heart-o"></i></button>
+                      </a>
+              </li>
+              <li style="float:right"><a href="/cart">
+                  <button style='font-size:24px'><i class='fa fa-shopping-cart'></i></button>
+                  </a>
+              </li>
+              <li style="float:right"><a href="/profile">            
+                <button style='font-size:24px'><i class='fa fa-user-circle'></i></button>
+                </a>
+              </li>
+      </ul>
+      </nav>
+      
+      
+      <script>
+      /* When the user clicks on the button, 
+      toggle between hiding and showing the dropdown content */
+      function myFunction() {
+      document.getElementById("myDropdown").classList.toggle("show");
+      }
+      
+      // Close the dropdown if the user clicks outside of it
+      window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+  var dropdowns = document.getElementsByClassName("dropdown-content");
+  var i;
+  for (i = 0; i < dropdowns.length; i++) {
+    var openDropdown = dropdowns[i];
+    if (openDropdown.classList.contains('show')) {
+      openDropdown.classList.remove('show');
+    }
+  }
+}
+}
+</script>
+
+     <title>Productos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            justify-content: center;
+        }
+        .product-card {
+            width: 22%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+            background-color: #f9f9f9;
+        }
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+        .product-card img {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .product-card h3 {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .product-card p {
+            font-size: 16px;
+            color: #555;
+            margin: 5px 0;
+        }
+        .product-card a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .product-card a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; margin: 20px 0;">Todos los Productos</h1>
+    <div class="container">
+        {% for product in products %}
+        <div class="product-card">
+            <img src="{{ product.foto_producto }}" alt="{{ product.nom_producto }}">
+            <h3><a href="{{ url_for('producto', id_producto=product.id_producto) }}">{{ product.nom_producto }}</a></h3>
+            <p>Precio: ${{ product.precio }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
+
+
+</body>
+</html>

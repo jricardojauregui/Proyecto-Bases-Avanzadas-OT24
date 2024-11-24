@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ <title>Mississipi</title>
+ <link rel="stylesheet" href="{{url_for('static',filename='css/estilo.css')}}"/>
+ <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+  <!--INICIO DE MENU -->
+  <nav class= "menu-principal">
+  <ul>
+  <li style="margin-right: 20px;"><a href="/" style="color: white; text-decoration: none;">Inicio</a></li>
+  <li>
+  <form action="/buscar" method="get" class="buscador">
+        <input type="search" name="query" placeholder="Buscar..." required>
+        <button type="submit">Buscar</button>
+    </form>
+  </li>
+          <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn">Productos</button>
+            <div id="myDropdown" class="dropdown-content">
+                  <li><a href="/products/category/1">Electronicos</a></li>
+                  <li><a href="/products/category/2">Hogar</a></li>
+                  <li><a href="/products/category/3'">Ropa</a></li>
+                  <li><a href="/products/category/4'">Juguetes</a></li>
+                  <li><a href="/products/category/5">Deportes</a></li>
+          </div>
+        </div>
+        <li style="margin-right: 20px;">
+                <a href="/popular" style="color: white; text-decoration: none;">Popular</a>  
+              </li>
+              <li style="margin-right: 20px;">
+                      <a href="/lo-nuevo" style="color: white; text-decoration: none;">Lo nuevo</a>
+              </li>
+              <li style="float:right">
+                      <a href="/wishlist">
+                  <button style="font-size:24px"><i class="fa fa-heart-o"></i></button>
+                      </a>
+              </li>
+              <li style="float:right"><a href="/cart">
+                  <button style='font-size:24px'><i class='fa fa-shopping-cart'></i></button>
+                  </a>
+              </li>
+              <li style="float:right"><a href="/profile">            
+                <button style='font-size:24px'><i class='fa fa-user-circle'></i></button>
+                </a>
+              </li>
+      </ul>
+      </nav>
+      
+      
+      <script>
+      /* When the user clicks on the button, 
+      toggle between hiding and showing the dropdown content */
+      function myFunction() {
+      document.getElementById("myDropdown").classList.toggle("show");
+      }
+      
+      // Close the dropdown if the user clicks outside of it
+      window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+  var dropdowns = document.getElementsByClassName("dropdown-content");
+  var i;
+  for (i = 0; i < dropdowns.length; i++) {
+    var openDropdown = dropdowns[i];
+    if (openDropdown.classList.contains('show')) {
+      openDropdown.classList.remove('show');
+    }
+  }
+}
+}
+</script>
