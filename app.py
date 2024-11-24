@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
 from database import mysql, init_app
 
-from controllers.adminController import loginAdmin, logoutAdmin, mostrarEmpresas, editarEmpresas, eliminarEmpresas
+from controllers.adminController import admin_login, admin_logout, admin_view_dashboard, admin_edit_products, admin_edit_users
 from controllers.usuarioController import user_login, user_register, user_update, user_logout, user_delete_account, user_profile, user_view_and_manage_cart, user_order_history, user_view_wishlist, user_view_product, user_view_all_products, user_view_products_by_category
 app = Flask(__name__)
 
@@ -20,11 +20,11 @@ def inicio():
     return redirect(url_for('inicio'))
 
 ### RUTAS ADMIN
-app.add_url_rule('/loginAdmin', view_func=loginAdmin, methods=['GET', 'POST'])
-app.add_url_rule('/logoutAdmin', view_func=logoutAdmin)
-app.add_url_rule('/empresas', view_func=mostrarEmpresas)
-app.add_url_rule('/editarEmpresas/<int:id>', view_func=editarEmpresas, methods=['GET', 'POST'])
-app.add_url_rule('/eliminarEmpresas/<int:id>', view_func=eliminarEmpresas, methods=['GET', 'POST'])
+app.add_url_rule('/adminLogin', view_func=admin_login, methods=['GET', 'POST'])
+app.add_url_rule('/adminLogout', view_func=admin_logout)
+app.add_url_rule('/dashboard', view_func=admin_view_dashboard)
+app.add_url_rule('/editProducts/<int:id_producto>', view_func=admin_edit_products, methods=['GET', 'POST'])
+app.add_url_rule('/editUsers/<int:id_usr>', view_func=admin_edit_users, methods=['GET', 'POST'])
 
 ### RUTAS USUARIO
 app.add_url_rule('/login', view_func=user_login, methods=['GET', 'POST'])
