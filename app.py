@@ -17,7 +17,7 @@ init_app(app)
 ### RUTA LANDING
 @app.route('/')
 def inicio():
-    return redirect(url_for('inicio'))
+    return render_template('inicio.html') ### checar html
 
 ### RUTAS ADMIN
 app.add_url_rule('/adminLogin', view_func=admin_login, methods=['GET', 'POST'])
