@@ -896,3 +896,17 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE VerificarRolAdmin(
+    IN p_id_usr INT
+)
+BEGIN
+    SELECT 1
+    FROM usuarios_roles ur
+    INNER JOIN roles r ON ur.id_rol = r.id_rol
+    WHERE ur.id_usr = p_id_usr AND r.nom_rol = 'Administrador';
+END //
+
+DELIMITER ;
