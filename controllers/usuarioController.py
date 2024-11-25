@@ -305,14 +305,14 @@ def user_manage_credit_cards():
     user_cards = get_user_cards(id_usr) 
     return render_template('manage_cards.html', user_cards=user_cards)
 
-def products_with_discount():
+def user_view_products_with_discount():
     products = get_products_on_promotion()
     return render_template('promotion_products.html', products=products)
 
-def most_requested_products():
+def user_view_most_requested_products():
     products = get_most_requested_products()
     return render_template('most_requested_products.html', products=products)
 
-def newest_products():
+def user_view_newest_products():
     products = get_newest_products()
     return render_template('newest_products.html', products=products)
