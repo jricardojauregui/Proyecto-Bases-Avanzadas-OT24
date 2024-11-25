@@ -1,7 +1,6 @@
 from database import mysql
 import MySQLdb.cursors
 
-@staticmethod
 def login_user(username, hashed_password):
     try:
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
