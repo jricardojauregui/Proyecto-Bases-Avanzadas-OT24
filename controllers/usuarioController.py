@@ -305,7 +305,7 @@ def user_manage_credit_cards():
     user_cards = get_user_cards(id_usr) 
     return render_template('manage_cards.html', user_cards=user_cards)
 
-def products_on_promotion():
+def products_with_discount():
     products = get_products_on_promotion()
     return render_template('promotion_products.html', products=products)
 
