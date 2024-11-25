@@ -51,7 +51,7 @@ app.add_url_rule('/deleteAccount', view_func=user_delete_account, methods=['GET'
 app.add_url_rule('/profile', view_func=user_profile, methods=['GET'])
 app.add_url_rule('/cart', view_func=user_view_and_manage_cart, methods=['GET', 'POST'])
 app.add_url_rule('/orderHistory', view_func=user_order_history, methods=['GET', 'POST'])
-app.add_url_rule('/wishlist', view_func=user_view_wishlist, methods=['GET', 'POST'])
+app.add_url_rule('/wishlist', view_func=user_view_wishlist, methods=['GET'])
 app.add_url_rule('/product/<int:id_producto>', view_func=user_view_product, methods=['GET', 'POST'])
 app.add_url_rule('/products', view_func=user_view_all_products, methods=['GET'])
 app.add_url_rule('/products/category/<int:id_categoria>', view_func=user_view_products_by_category, methods=['GET'])
