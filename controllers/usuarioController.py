@@ -258,7 +258,20 @@ def user_view_wishlist():
 
         return render_template('wishlist.html', wishlist_items=wishlist_items)
     
-def manage_credit_cards():
+def user_view_credit_cards():
+    id_usr = session.get('id_usr')
+
+    if not id_usr:
+        flash("Debes iniciar sesión para ver tus tarjetas.", "error")
+        return redirect(url_for('login'))
+
+    user_cards = get_user_cards(id_usr)
+    if not user_cards:
+        flash("No tienes tarjetas registradas.", "info")
+
+    return render_template('view_cards.html', user_cards=user_cards)
+    
+def user_manage_credit_cards():
     id_usr = session.get('id_usr')
 
     if not id_usr:
