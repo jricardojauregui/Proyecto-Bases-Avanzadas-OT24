@@ -4,8 +4,8 @@ import hashlib
 
 def user_login():
     if request.method == 'POST':
-        username = request.form.get('username')  
-        password = request.form.get('clave')  
+        username = request.form['username']
+        password = request.form['clave']
 
         if not username or not password:
             flash('Por favor, ingresa usuario y contraseña.', 'error')
