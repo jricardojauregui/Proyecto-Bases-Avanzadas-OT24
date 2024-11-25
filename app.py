@@ -28,7 +28,7 @@ app.add_url_rule('/editUsers/<int:id_usr>', view_func=admin_edit_users, methods=
 
 ### RUTAS DASHBOARD
 @app.route('/dashboard')
-def inicio():
+def dash():
     return render_template('dashboard.html')
 
 @app.route('/data/Promedio_calificacion_Productos', methods=['GET'])
