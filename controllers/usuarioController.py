@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from models.usuario import login_user, register_user, update_user, get_user_profile, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, validate_user_credentials, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category, get_all_products, get_products_by_category
+from models.usuario import login_user, register_user, update_user, get_user_profile, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category, get_all_products, get_products_by_category, add_credit_card, remove_credit_card
 import hashlib
 
 def user_login():
@@ -257,3 +257,35 @@ def user_view_wishlist():
             flash("Tu lista de deseos está vacía.", "info")
 
         return render_template('wishlist.html', wishlist_items=wishlist_items)
+    
+def manage_credit_cards():
+    id_usr = session.get('id_usr')
+
+    if not id_usr:
+        flash("Debes iniciar sesión para gestionar tus tarjetas.", "error")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        if 'add_card' in request.form:  
+            tarjeta_usr = request.form.get('tarjeta_usr')
+            id_banco = request.form.get('id_banco')
+            propietario = request.form.get('propietario')
+            caduci_tarjeta = request.form.get('caduci_tarjeta')
+
+            if not (tarjeta_usr and id_banco and propietario and caduci_tarjeta):
+                flash("Todos los campos son obligatorios para añadir una tarjeta.", "error")
+            else:
+                success, message = add_credit_card(id_usr, tarjeta_usr, id_banco, propietario, caduci_tarjeta)
+                flash(message, "success" if success else "error")
+
+        elif 'remove_card' in request.form:  
+            tarjeta_usr = request.form.get('tarjeta_usr')
+
+            if not tarjeta_usr:
+                flash("No se seleccionó ninguna tarjeta para eliminar.", "error")
+            else:
+                success, message = remove_credit_card(id_usr, tarjeta_usr)
+                flash(message, "success" if success else "error")
+
+    user_cards = get_user_cards(id_usr)  # Obtener las tarjetas actuales del usuario
+    return render_template('manage_cards.html', user_cards=user_cards)

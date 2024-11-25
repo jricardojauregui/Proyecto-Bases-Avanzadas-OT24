@@ -309,3 +309,28 @@ def delete_user_account(id_usr):
         return False, str(e)
     finally:
         cur.close()
+
+def add_credit_card(id_usr, tarjeta_usr, id_banco, propietario, caduci_tarjeta):
+    cur = mysql.connection.cursor()
+    try:
+        cur.callproc('AnadirTarjeta', [id_usr, tarjeta_usr, id_banco, propietario, caduci_tarjeta])
+        mysql.connection.commit()
+        return True, "Tarjeta añadida exitosamente."
+    except MySQLdb.Error as e:
+        print(f"Error al añadir la tarjeta: {e}")
+        return False, str(e)
+    finally:
+        cur.close()
+
+def remove_credit_card(id_usr, tarjeta_usr):
+    cur = mysql.connection.cursor()
+    try:
+        cur.callproc('BorrarTarjeta', [id_usr, tarjeta_usr])
+        mysql.connection.commit()
+        return True, "Tarjeta eliminada exitosamente."
+    except MySQLdb.Error as e:
+        print(f"Error al eliminar la tarjeta: {e}")
+        return False, str(e)
+    finally:
+        cur.close()
+
