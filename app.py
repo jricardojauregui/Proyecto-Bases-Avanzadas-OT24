@@ -3,7 +3,7 @@ from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
 from database import mysql, init_app
 
 from controllers.adminController import admin_login, admin_logout, admin_manage_products, admin_manage_users, admin_manage_orders, admin_view_dash, promedio_calificacion_productos, cantidad_categorias_productos, cantidad_stock_productos, pedidos_por_mes, usuarios_por_mes, productos_estado, ganancias_por_mes
-from controllers.usuarioController import user_login, user_register, user_update, user_logout, user_delete_account, user_profile, user_view_and_manage_cart, user_order_history, user_view_wishlist, user_view_product, user_view_all_products, user_view_products_by_category, user_view_credit_cards, user_manage_credit_cards
+from controllers.usuarioController import user_login, user_register, user_update, user_logout, user_delete_account, user_profile, user_view_and_manage_cart, user_order_history, user_view_wishlist, user_view_product, user_view_all_products, user_view_products_by_category, user_view_credit_cards, user_manage_credit_cards, products_on_promotion, most_requested_products, newest_products
 app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = MYSQL_HOST
@@ -55,3 +55,6 @@ app.add_url_rule('/wishlist', view_func=user_view_wishlist, methods=['GET', 'POS
 app.add_url_rule('/product/<int:id_producto>', view_func=user_view_product, methods=['GET', 'POST'])
 app.add_url_rule('/products', view_func=user_view_all_products, methods=['GET'])
 app.add_url_rule('/products/category/<int:id_categoria>', view_func=user_view_products_by_category, methods=['GET'])
+app.add_url_rule('/promociones', view_func=products_on_promotion, methods=['GET'])
+app.add_url_rule('/populares', view_func=most_requested_products, methods=['GET'])
+app.add_url_rule('/novedades', view_func=newest_products, methods=['GET'])

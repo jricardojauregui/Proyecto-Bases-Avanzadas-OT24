@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from models.usuario import login_user, register_user, update_user, get_user_profile, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category, get_all_products, get_products_by_category, add_credit_card, remove_credit_card, validate_user_credentials
+from models.usuario import login_user, register_user, update_user, get_user_profile, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category, get_all_products, get_products_by_category, add_credit_card, remove_credit_card, validate_user_credentials, get_most_requested_products, get_newest_products, get_products_on_promotion
 import hashlib
 
 def user_login():
@@ -302,5 +302,17 @@ def user_manage_credit_cards():
                 success, message = remove_credit_card(id_usr, tarjeta_usr)
                 flash(message, "success" if success else "error")
 
-    user_cards = get_user_cards(id_usr)  # Obtener las tarjetas actuales del usuario
+    user_cards = get_user_cards(id_usr) 
     return render_template('manage_cards.html', user_cards=user_cards)
+
+def products_on_promotion():
+    products = get_products_on_promotion()
+    return render_template('promotion_products.html', products=products)
+
+def most_requested_products():
+    products = get_most_requested_products()
+    return render_template('most_requested_products.html', products=products)
+
+def newest_products():
+    products = get_newest_products()
+    return render_template('newest_products.html', products=products)

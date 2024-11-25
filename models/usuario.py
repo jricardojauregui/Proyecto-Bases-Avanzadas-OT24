@@ -345,3 +345,39 @@ def validate_user_credentials(username, password):
         return None
     finally:
         cur.close()
+
+def get_products_on_promotion():
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cur.callproc('MostrarProductosEnPromocion')
+        products = cur.fetchall()
+        return products
+    except MySQLdb.Error as e:
+        print(f"Error al obtener productos en promoción: {e}")
+        return []
+    finally:
+        cur.close()
+
+def get_most_requested_products():
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cur.callproc('MostrarProductosMasSolicitadosParaWeb')
+        products = cur.fetchall()
+        return products
+    except MySQLdb.Error as e:
+        print(f"Error al obtener productos más solicitados: {e}")
+        return []
+    finally:
+        cur.close()
+
+def get_newest_products():
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cur.callproc('MostrarProductosMasNuevos')
+        products = cur.fetchall()
+        return products
+    except MySQLdb.Error as e:
+        print(f"Error al obtener productos más nuevos: {e}")
+        return []
+    finally:
+        cur.close()
