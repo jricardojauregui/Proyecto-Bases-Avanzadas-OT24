@@ -301,7 +301,7 @@ def get_wishlist(id_usr):
 def delete_user_account(id_usr):
     cur = mysql.connection.cursor()
     try:
-        cur.callproc('DeleteUsuario', [id_usr])
+        cur.callproc('BorrarUsuario', [id_usr])
         mysql.connection.commit()
         return True, "Cuenta eliminada exitosamente."
     except MySQLdb.Error as e:

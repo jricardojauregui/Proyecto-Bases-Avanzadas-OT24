@@ -56,7 +56,7 @@ DELIMITER ;
 -- delete usuario
 
 DELIMITER //
-CREATE PROCEDURE DeleteUsuario(
+CREATE PROCEDURE BorrarUsuario(
     IN p_id_usr INT
 )
 BEGIN
@@ -68,7 +68,7 @@ DELIMITER ;
 -- Mostrar todos los usuarios
 
 DELIMITER //
-CREATE PROCEDURE MostrarUsuarios()
+CREATE PROCEDURE MostrarTodosUsuarios()
 BEGIN
     SELECT 
         id_usr, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, fecha_registro, foto_usuario
@@ -907,6 +907,22 @@ BEGIN
     FROM usuarios_roles ur
     INNER JOIN roles r ON ur.id_rol = r.id_rol
     WHERE ur.id_usr = p_id_usr AND r.nom_rol = 'Administrador';
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE ActualizarCampoUsuario(
+    IN p_id_usr INT,
+    IN p_campo VARCHAR(100),
+    IN p_valor TEXT
+)
+BEGIN
+    SET @query = CONCAT('UPDATE usuarios SET ', p_campo, ' = ? WHERE id_usr = ?');
+    PREPARE stmt FROM @query;
+    EXECUTE stmt USING p_valor, p_id_usr;
+    DEALLOCATE PREPARE stmt;
 END //
 
 DELIMITER ;

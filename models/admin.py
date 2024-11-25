@@ -99,3 +99,51 @@ def get_ganancias_por_mes():
     finally:
         cur.close()
 
+
+def get_all_users():
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cur.callproc('MostrarTodosUsuarios')
+        users = cur.fetchall()
+        return users
+    except MySQLdb.Error as e:
+        print(f"Error al obtener usuarios: {e}")
+        return None
+    finally:
+        cur.close()
+
+def update_user_field(id_usr, field, value):
+    cur = mysql.connection.cursor()
+    try:
+        cur.callproc('ActualizarCampoUsuario', [id_usr, field, value])
+        mysql.connection.commit()
+        return True, "Campo actualizado correctamente."
+    except MySQLdb.Error as e:
+        print(f"Error al actualizar el campo del usuario: {e}")
+        return False, str(e)
+    finally:
+        cur.close()
+
+def delete_user_by_id(id_usr):
+    cur = mysql.connection.cursor()
+    try:
+        cur.callproc('BorrarUsuario', [id_usr])
+        mysql.connection.commit()
+        return True, "Usuario eliminado correctamente."
+    except MySQLdb.Error as e:
+        print(f"Error al borrar usuario: {e}")
+        return False, str(e)
+    finally:
+        cur.close()
+
+def delete_product_by_id(id_producto):
+    cur = mysql.connection.cursor()
+    try:
+        cur.callproc('BorrarProducto', [id_producto])
+        mysql.connection.commit()
+        return True, "Producto eliminado correctamente."
+    except MySQLdb.Error as e:
+        print(f"Error al borrar el producto: {e}")
+        return False, str(e)
+    finally:
+        cur.close()
