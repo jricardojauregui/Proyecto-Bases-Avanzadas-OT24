@@ -22,7 +22,7 @@ def inicio():
 ### RUTAS ADMIN
 app.add_url_rule('/adminLogin', view_func=admin_login, methods=['GET', 'POST'])
 app.add_url_rule('/adminLogout', view_func=admin_logout)
-app.add_url_rule('/manageProducts/<int:id_producto>', view_func=admin_manage_products, methods=['GET', 'POST'])
+app.add_url_rule('/manageProducts', view_func=admin_manage_products, methods=['GET', 'POST'])
 app.add_url_rule('/manageUsers', view_func=admin_manage_users, methods=['GET', 'POST'])
 app.add_url_rule('/manageOrders>', view_func=admin_manage_orders, methods=['GET', 'POST'])
 
