@@ -1,11 +1,17 @@
 from database import mysql
 import MySQLdb.cursors
 
+@staticmethod
 def login_user(username, hashed_password):
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT * FROM usuarios WHERE username = %s AND clave = %s', (username, hashed_password))
-    user = cur.fetchone()  
-    return user
+    try:
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT * FROM usuarios WHERE username = %s AND clave = %s', (username, hashed_password))
+        user = cur.fetchone()  
+        return user
+    except:
+        return False
+    finally:
+        cur.close()
 
 
 def register_user(username, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario):
