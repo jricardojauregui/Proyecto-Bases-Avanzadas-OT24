@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard Missisipi</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/series-label.js"></script>
+    <script src="https://code.highcharts.com/exporting.js"></script>
+    <script src="https://code.highcharts.com/export-data.js"></script>
+    <script src="https://code.highcharts.com/accessibility.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .counter-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .counter-card {
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 30%;
+        }
+
+        .counter-card h2 {
+            font-size: 2em;
+            margin: 10px 0;
+        }
+
+        .counter-card p {
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+            gap: 20px; /* Espacio entre las gráficas */
+            margin: 20px;
+        }
+
+        .chart {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart h3 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Inicio del Dashboard -->
+    <p style="text-align: center; font-size: 1.5em; margin-top: 20px;">Dashboard Missisipi.</p>
+    <hr>
+
+    <!-- Contadores -->
+    <div class="counter-container">
+        <div class="counter-card">
+            <h2 id="productos_entregados">0</h2>
+            <p>Productos Completados</p>
+        </div>
+        <div class="counter-card">
+            <h2 id="productos_cancelados">0</h2>
+            <p>Productos Cancelados</p>
+        </div>
+        <div class="counter-card">
+            <h2 id="productos_EnProceso">0</h2>
+            <p>Productos Pendientes</p>
+        </div>
+    </div>
+
+    <!-- Gráficas -->
+    <div class="charts-container">
+        <div class="chart">
+            <h3>Promedio de Calificaciones por Producto</h3>
+            <div id="Promedio_calificacion_Productos" style="width: 100%; height: 300px;"></div>
+        </div>
+        <div class="chart">
+            <h3>Total de Productos por Categoría</h3>
+            <div id="Cantidad_categorias_Productos" style="width: 100%; height: 300px;"></div>
+        </div>
+        <div class="chart">
+            <h3>Stock por Productos</h3>
+            <div id="Cantidad_stock_Productos" style="width: 100%; height: 300px;"></div>
+        </div>
+        <div class="chart">
+            <h3>Pedidos por Mes</h3>
+            <div id="pedidos_por_mes" style="width: 100%; height: 300px;"></div>
+        </div>
+        <div class="chart">
+            <h3>Usuarios Nuevos por Mes</h3>
+            <div id="usuarios_por_mes" style="width: 100%; height: 300px;"></div>
+        </div>
+        <div class="chart">
+            <h3>Ganancias por Mes</h3>
+            <div id="ganancias_por_mes" style="width: 100%; height: 300px;"></div>
+        </div>
+    </div>
+    <!-- Fin del Dashboard -->
+</body>
+</html>

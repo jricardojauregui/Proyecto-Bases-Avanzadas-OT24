@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from models.usuario import login_user, register_user, update_user, get_user_profile, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category, get_all_products, get_products_by_category, add_credit_card, remove_credit_card
+from models.usuario import login_user, register_user, update_user, get_user_profile, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category, get_all_products, get_products_by_category, add_credit_card, remove_credit_card, validate_user_credentials
 import hashlib
 
 def user_login():
@@ -111,8 +111,10 @@ def user_delete_account():
         if not username or not password:
             flash("Por favor, proporciona tu nombre de usuario y contraseña.", "error")
             return redirect(url_for('delete_account'))
-
-        user_id = validate_user_credentials(username, password)
+        
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+        user_id = validate_user_credentials(username, hashed_password)
+        
         if not user_id:
             flash("Nombre de usuario o contraseña incorrectos, o el usuario no existe.", "error")
             return redirect(url_for('deleteAccount'))

@@ -334,3 +334,14 @@ def remove_credit_card(id_usr, tarjeta_usr):
     finally:
         cur.close()
 
+def validate_user_credentials(username, password):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cur.execute("SELECT id_usr FROM usuarios WHERE username = %s AND clave = %s", (username, password))
+        user = cur.fetchone()
+        return user['id_usr'] if user else None
+    except MySQLdb.Error as e:
+        print(f"Error al validar las credenciales: {e}")
+        return None
+    finally:
+        cur.close()

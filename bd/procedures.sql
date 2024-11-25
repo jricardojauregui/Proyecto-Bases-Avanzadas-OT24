@@ -791,3 +791,108 @@ BEGIN
         pc.id_categoria = p_id_categoria;
 END //
 DELIMITER ;
+
+--grafico de promedio de calificaciones
+
+DELIMITER //
+
+CREATE PROCEDURE promedioCalifProductos()
+BEGIN
+    SELECT nom_producto, COALESCE(promedio_calificacion, 0) AS promedio_calificacion FROM CalificacionesPromedioPorProducto;
+END //
+
+DELIMITER ;
+
+--cant de productos por categorias
+
+
+DELIMITER //
+
+CREATE PROCEDURE cantProductosCategorias()
+BEGIN
+    SELECT categoria, cantidad_productos FROM CategoriasCantidadPorductos;
+END //
+
+DELIMITER ;
+
+
+--Cant de stock por producto
+
+DELIMITER //
+
+CREATE PROCEDURE cantProductosStock()
+BEGIN
+    SELECT producto, cantidad_stock FROM VistaProductosStock;
+END //
+
+DELIMITER ;
+
+
+
+--pedidos por mes
+
+DELIMITER //
+
+CREATE PROCEDURE pedidosPorMes()
+BEGIN
+    SELECT mes, total_pedidos from PedidosPorMes;
+END //
+
+DELIMITER ;
+
+
+--Usuarios por mes
+
+DELIMITER //
+
+CREATE PROCEDURE UsuariosPorMes()
+BEGIN
+    SELECT mes, usuarios_activos from usuariosPorMes;
+END //
+
+DELIMITER ;
+
+--pedidos cancelados
+
+DELIMITER //
+
+CREATE PROCEDURE verCancelados()
+BEGIN
+    SELECT count(*) AS Total FROM PedidosCancelados;
+END //
+
+DELIMITER ;
+
+-- pedidos en proceso
+
+DELIMITER //
+
+CREATE PROCEDURE verCompletados()
+BEGIN
+    SELECT count(*) AS Total FROM PedidosCompletos;
+END //
+
+DELIMITER ;
+
+--pedidos completados
+
+DELIMITER //
+
+CREATE PROCEDURE verEnProceso()
+BEGIN
+    SELECT count(*) AS Total FROM PedidosEnProceso;
+END //
+
+DELIMITER ;
+
+--Ganacias por mes
+
+
+DELIMITER //
+
+CREATE PROCEDURE gananciasPorMes()
+BEGIN
+    SELECT mes, ganancias from GananciasPorMes;
+END //
+
+DELIMITER ;
