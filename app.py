@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
 from database import mysql, init_app
 
-from controllers.adminController import admin_login, admin_logout, admin_manage_products, admin_manage_users, admin_edit_orders, admin_view_dash, promedio_calificacion_productos, cantidad_categorias_productos, cantidad_stock_productos, pedidos_por_mes, usuarios_por_mes, productos_estado, ganancias_por_mes
+from controllers.adminController import admin_login, admin_logout, admin_manage_products, admin_manage_users, admin_manage_orders, admin_view_dash, promedio_calificacion_productos, cantidad_categorias_productos, cantidad_stock_productos, pedidos_por_mes, usuarios_por_mes, productos_estado, ganancias_por_mes
 from controllers.usuarioController import user_login, user_register, user_update, user_logout, user_delete_account, user_profile, user_view_and_manage_cart, user_order_history, user_view_wishlist, user_view_product, user_view_all_products, user_view_products_by_category, user_view_credit_cards, user_manage_credit_cards
 app = Flask(__name__)
 
@@ -24,7 +24,7 @@ app.add_url_rule('/adminLogin', view_func=admin_login, methods=['GET', 'POST'])
 app.add_url_rule('/adminLogout', view_func=admin_logout)
 app.add_url_rule('/manageProducts/<int:id_producto>', view_func=admin_manage_products, methods=['GET', 'POST'])
 app.add_url_rule('/manageUsers', view_func=admin_manage_users, methods=['GET', 'POST'])
-app.add_url_rule('/manageOrders>', view_func=admin_edit_orders, methods=['GET', 'POST'])
+app.add_url_rule('/manageOrders>', view_func=admin_manage_orders, methods=['GET', 'POST'])
 
 
 ### RUTAS DASHBOARD

@@ -926,3 +926,42 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE MostrarTodasOrdenes()
+BEGIN
+    SELECT 
+        p.id_pedido, p.fecha_pedido, p.estado_pedido, u.username, u.nom_usr, u.apellido_usr, t.tarjeta_usr
+    FROM pedidos p
+    INNER JOIN usuarios u ON p.id_usr = u.id_usr
+    INNER JOIN tarjetas t ON p.tarjeta_usr = t.tarjeta_usr;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE ActualizarEstadoOrden(
+    IN p_id_pedido INT,
+    IN p_estado_pedido VARCHAR(50)
+)
+BEGIN
+    UPDATE pedidos
+    SET estado_pedido = p_estado_pedido
+    WHERE id_pedido = p_id_pedido;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE BorrarOrden(
+    IN p_id_pedido INT
+)
+BEGIN
+    DELETE FROM pedidos
+    WHERE id_pedido = p_id_pedido;
+END //
+
+DELIMITER ;

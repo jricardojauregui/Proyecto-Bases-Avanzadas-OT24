@@ -147,3 +147,40 @@ def delete_product_by_id(id_producto):
         return False, str(e)
     finally:
         cur.close()
+
+def get_all_orders():
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cur.callproc('MostrarTodasOrdenes')
+        orders = cur.fetchall()
+        return orders
+    except MySQLdb.Error as e:
+        print(f"Error al obtener las órdenes: {e}")
+        return []
+    finally:
+        cur.close()
+
+def update_order_status(id_pedido, estado_pedido):
+    cur = mysql.connection.cursor()
+    try:
+        cur.callproc('ActualizarEstadoOrden', [id_pedido, estado_pedido])
+        mysql.connection.commit()
+        return True, "Estado de la orden actualizado correctamente."
+    except MySQLdb.Error as e:
+        print(f"Error al actualizar el estado de la orden: {e}")
+        return False, str(e)
+    finally:
+        cur.close()
+
+def delete_order_by_id(id_pedido):
+    cur = mysql.connection.cursor()
+    try:
+        cur.callproc('BorrarOrden', [id_pedido])
+        mysql.connection.commit()
+        return True, "Orden eliminada correctamente."
+    except MySQLdb.Error as e:
+        print(f"Error al borrar la orden: {e}")
+        return False, str(e)
+    finally:
+        cur.close()
+

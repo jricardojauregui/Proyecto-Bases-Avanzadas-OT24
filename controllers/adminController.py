@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
-from models.admin import get_promedio_calificacion_productos, get_cantidad_categorias_productos, get_cantidad_stock_productos, get_pedidos_por_mes, get_usuarios_por_mes, get_productos_estado, get_ganancias_por_mes, is_admin, update_user_field, get_all_users, delete_user_by_id, delete_product_by_id
+from models.admin import get_promedio_calificacion_productos, get_cantidad_categorias_productos, get_cantidad_stock_productos, get_pedidos_por_mes, get_usuarios_por_mes, get_productos_estado, get_ganancias_por_mes, is_admin, update_user_field, get_all_users, delete_user_by_id, delete_product_by_id, update_order_status, delete_order_by_id, get_all_orders
 from models.usuario import login_user, get_all_products
 from functools import wraps
 import hashlib
@@ -120,6 +120,30 @@ def admin_manage_products():
             success, message = delete_product_by_id(id_producto)
             return jsonify({"success": success, "message": message})
 
-    # GET: Recuperar todos los productos
     products = get_all_products()
     return render_template('manage_products.html', products=products)
+
+@admin_required
+def admin_manage_orders():
+    if request.method == 'POST':
+        if 'estado_pedido' in request.form:
+            id_pedido = request.form.get('id_pedido')
+            estado_pedido = request.form.get('estado_pedido')
+
+            if not id_pedido or not estado_pedido:
+                return jsonify({"success": False, "message": "Datos incompletos."})
+
+            success, message = update_order_status(id_pedido, estado_pedido)
+            return jsonify({"success": success, "message": message})
+
+        if 'delete_order' in request.form:
+            id_pedido = request.form.get('delete_order')
+
+            if not id_pedido:
+                return jsonify({"success": False, "message": "No se especificó la orden a eliminar."})
+
+            success, message = delete_order_by_id(id_pedido)
+            return jsonify({"success": success, "message": message})
+
+    orders = get_all_orders()
+    return render_template('manage_orders.html', orders=orders)
