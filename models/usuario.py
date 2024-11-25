@@ -2,17 +2,18 @@ from database import mysql
 import MySQLdb.cursors
 
 def login_user(username, hashed_password):
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM usuarios WHERE username = %s', (username,))
-    user = cur.fetchone()  
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cur.execute('SELECT * FROM usuarios WHERE username = %s AND clave = %s', (username, hashed_password))
+        user = cur.fetchone() 
 
-    if user:
-        stored_password = user['password']
-        print(f"Contraseña ingresada (hash): {hashed_password}")
-        print(f"Contraseña almacenada: {stored_password}")
-        if stored_password == hashed_password:
-            return user    
-    return None
+        if user:
+            return user  
+    except MySQLdb.Error as e:
+        print(f"Error en la consulta SQL: {e}")
+    finally:
+        cur.close()
+    return None  
 
 
 def register_user(username, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario):
@@ -293,6 +294,18 @@ def get_wishlist(id_usr):
         products = cur.fetchall()
         return products
     except MySQLdb.Error as e:
+        return False, str(e)
+    finally:
+        cur.close()
+
+def delete_user_account(id_usr):
+    cur = mysql.connection.cursor()
+    try:
+        cur.callproc('DeleteUsuario', [id_usr])
+        mysql.connection.commit()
+        return True, "Cuenta eliminada exitosamente."
+    except MySQLdb.Error as e:
+        print(f"Error al eliminar la cuenta: {e}")
         return False, str(e)
     finally:
         cur.close()
