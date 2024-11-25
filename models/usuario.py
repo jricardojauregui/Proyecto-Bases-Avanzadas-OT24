@@ -2,15 +2,17 @@ from database import mysql
 import MySQLdb.cursors
 
 def login_user(username, hashed_password):
-    try:
-        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute('SELECT * FROM usuarios WHERE username = %s AND clave = %s', (username, hashed_password))
-        user = cur.fetchone()  
-        return user
-    except:
-        return False
-    finally:
-        cur.close()
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM usuarios WHERE username = %s', (username,))
+    user = cur.fetchone()  
+
+    if user:
+        stored_password = user['password']
+        print(f"Contraseña ingresada (hash): {hashed_password}")
+        print(f"Contraseña almacenada: {stored_password}")
+        if stored_password == hashed_password:
+            return user    
+    return None
 
 
 def register_user(username, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario):
