@@ -1,5 +1,6 @@
 from database import mysql
 import MySQLdb.cursors
+from flask import Flask, session
 
 def login_user(username, hashed_password):
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -8,6 +9,9 @@ def login_user(username, hashed_password):
         user = cur.fetchone() 
 
         if user:
+            session['loggedin'] = True  # Establece que el usuario está logueado
+            session['id_usr'] = user['id_usr']  # Guarda el ID del usuario en la sesión
+            session['username'] = user['username']  # Guarda el nombre de usuario en la sesión
             return user  
     except MySQLdb.Error as e:
         print(f"Error en la consulta SQL: {e}")
