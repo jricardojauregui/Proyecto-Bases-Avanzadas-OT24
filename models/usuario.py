@@ -158,8 +158,8 @@ def get_last_purchase_date(id_usr, id_producto):
     try:
         cur.callproc('UltimaCompra', [id_usr, id_producto])
         result = cur.fetchone()
-        if result:
-            return result[0] 
+        if result and 'last_purchase_date' in result:
+            return result['last_purchase_date']
         else:
             return None 
     except MySQLdb.Error as e:

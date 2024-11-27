@@ -13,25 +13,34 @@ def admin_login():
             return redirect(url_for('admin_login'))
 
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
-
         user = login_user(username, hashed_password)
-        if user and is_admin(user['id_usr']):
+
+        if user:
             session['loggedin'] = True
             session['id_usr'] = user['id_usr']
             session['username'] = user['username']
-            session['is_admin'] = True
-            flash('Acceso como administrador exitoso', 'success')
-            return redirect(url_for('dashboard'))
+
+            if is_admin(user['id_usr']):
+                session['is_admin'] = True
+                flash('Acceso como administrador exitoso', 'success')
+                return redirect(url_for('dashboard')) 
+            else:
+                session['is_admin'] = False
+                flash('No tienes acceso como administrador.', 'error')
+                return redirect(url_for('inicio')) 
+
         else:
-            flash('Credenciales incorrectas o no tienes acceso como administrador.', 'error')
+            flash('Credenciales incorrectas.', 'error')
+            return redirect(url_for('admin_login'))
 
     return render_template('admin_login.html')
+
 
 
 def admin_logout():
     session.clear()
     flash('Sesión cerrada correctamente.', 'success')
-    return redirect(url_for('admin_login'))
+    return redirect(url_for('adminLogin'))
 
 
 def admin_view_dash():
@@ -39,7 +48,7 @@ def admin_view_dash():
         return render_template('dashboard.html')
     else:
         flash('Debes iniciar sesión como administrador para acceder a esta página.', 'error')
-        return redirect(url_for('admin_login'))
+        return redirect(url_for('adminLogin'))
 
 
 def promedio_calificacion_productos():
@@ -48,7 +57,7 @@ def promedio_calificacion_productos():
         return jsonify([{"name": row[0], "y": float(row[1])} for row in resultado if row[1] is not None])
     else:
         flash('Debes iniciar sesión como administrador para acceder a esta página.', 'error')
-        return redirect(url_for('admin_login'))
+        return redirect(url_for('adminLogin'))
 
 
 def cantidad_categorias_productos():
@@ -57,7 +66,7 @@ def cantidad_categorias_productos():
         return jsonify([{"name": row[0], "y": float(row[1])} for row in resultado if row[1] is not None])
     else:
         flash('Debes iniciar sesión como administrador para acceder a esta página.', 'error')
-        return redirect(url_for('admin_login'))
+        return redirect(url_for('adminLogin'))
 
 
 def admin_manage_users():
@@ -87,7 +96,7 @@ def admin_manage_users():
         return render_template('manage_users.html', users=users)
     else:
         flash('Debes iniciar sesión como administrador para acceder a esta página.', 'error')
-        return redirect(url_for('admin_login'))
+        return redirect(url_for('adminLogin'))
 
 
 def admin_manage_products():
@@ -106,7 +115,7 @@ def admin_manage_products():
         return render_template('manage_products.html', products=products)
     else:
         flash('Debes iniciar sesión como administrador para acceder a esta página.', 'error')
-        return redirect(url_for('admin_login'))
+        return redirect(url_for('adminLogin'))
 
 
 def admin_manage_orders():
@@ -135,7 +144,7 @@ def admin_manage_orders():
         return render_template('manage_orders.html', orders=orders)
     else:
         flash('Debes iniciar sesión como administrador para acceder a esta página.', 'error')
-        return redirect(url_for('admin_login'))
+        return redirect(url_for('adminLogin'))
 
 
 def promedio_calificacion_productos():

@@ -149,7 +149,10 @@ CREATE PROCEDURE anadirCarrito(
     IN p_cantidad INT
 )
 BEGIN
-    INSERT INTO carrito_compras (id_usr, id_producto, cantidad, precio_unitario) SELECT p_id_usr, p_id_producto p_cantidad, precio FROM productos WHERE id_producto = p_id_producto;
+    INSERT INTO carrito_compras (id_usr, id_producto, cantidad, precio_unitario)
+    SELECT p_id_usr, p_id_producto, p_cantidad, precio
+    FROM productos
+    WHERE id_producto = p_id_producto;
 END //
 
 DELIMITER ;
