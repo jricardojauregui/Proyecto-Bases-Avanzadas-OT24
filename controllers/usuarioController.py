@@ -185,7 +185,7 @@ def user_view_product(id_producto):
 
         if request.method == 'POST':
             if 'add_to_cart' in request.form:
-                cantidad = int(request.form.get('cantidad', 1))
+                cantidad = int(request.form.get('cantidad'))
                 success, message = add_to_cart(id_usr, id_producto, cantidad)
                 flash(message, "success" if success else "error")
 
