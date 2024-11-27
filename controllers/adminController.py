@@ -136,3 +136,59 @@ def admin_manage_orders():
     else:
         flash('Debes iniciar sesión como administrador para acceder a esta página.', 'error')
         return redirect(url_for('admin_login'))
+
+
+def promedio_calificacion_productos():
+    if 'loggedin' in session and session.get('is_admin'):
+        resultado = get_promedio_calificacion_productos()
+        return jsonify([{"name": row[0], "y": float(row[1])} for row in resultado if row[1] is not None])
+    else:
+        return jsonify({"error": "Acceso no autorizado"}), 403  
+
+
+def cantidad_categorias_productos():
+    if 'loggedin' in session and session.get('is_admin'):
+        resultado = get_cantidad_categorias_productos()
+        return jsonify([{"name": row[0], "y": float(row[1])} for row in resultado if row[1] is not None])
+    else:
+        return jsonify({"error": "Acceso no autorizado"}), 403
+
+
+def cantidad_stock_productos():
+    if 'loggedin' in session and session.get('is_admin'):
+        resultado = get_cantidad_stock_productos()
+        return jsonify([{"name": row[0], "y": float(row[1])} for row in resultado if row[1] is not None])
+    else:
+        return jsonify({"error": "Acceso no autorizado"}), 403
+
+
+def pedidos_por_mes():
+    if 'loggedin' in session and session.get('is_admin'):
+        resultado = get_pedidos_por_mes()
+        return jsonify([{"name": row[0], "y": float(row[1])} for row in resultado if row[1] is not None])
+    else:
+        return jsonify({"error": "Acceso no autorizado"}), 403
+
+
+def usuarios_por_mes():
+    if 'loggedin' in session and session.get('is_admin'):
+        resultado = get_usuarios_por_mes()
+        return jsonify([{"name": row[0], "y": float(row[1])} for row in resultado if row[1] is not None])
+    else:
+        return jsonify({"error": "Acceso no autorizado"}), 403
+
+
+def productos_estado(estado):
+    if 'loggedin' in session and session.get('is_admin'):
+        resultado = get_productos_estado(estado)
+        return jsonify([{"total": resultado[0]}])
+    else:
+        return jsonify({"error": "Acceso no autorizado"}), 403
+
+
+def ganancias_por_mes():
+    if 'loggedin' in session and session.get('is_admin'):
+        resultado = get_ganancias_por_mes()
+        return jsonify([{"name": row[0], "y": float(row[1])} for row in resultado if row[1] is not None])
+    else:
+        return jsonify({"error": "Acceso no autorizado"}), 403
