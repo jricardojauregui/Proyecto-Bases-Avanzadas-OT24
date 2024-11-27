@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from models.usuario import register_user, update_user, get_user_profile, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category, get_all_products, get_products_by_category, add_credit_card, remove_credit_card, validate_user_credentials, get_most_requested_products, get_newest_products, get_products_on_promotion, get_recommended_products
+from models.admin import login_all
 import hashlib
 
 def user_register():
@@ -15,7 +16,7 @@ def user_register():
             direccion = request.form['direccion']
         except KeyError:
             flash('Faltan datos obligatorios en el formulario. Por favor verifica tus datos.', 'error')
-            return redirect(url_for('register'))
+            return redirect(url_for('user_register'))
         foto_usuario = request.form.get('foto_usuario', '') 
 
         hashed_clave = hashlib.sha256(clave.encode()).hexdigest()
@@ -23,10 +24,10 @@ def user_register():
         success, message = register_user(hashed_clave, username, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario)
         if success:
             flash('Registro exitoso.', 'success')
-            return redirect(url_for('login'))
+            return redirect(url_for('login_all'))
         else:
             flash(message, 'error')
-            return redirect(url_for('register')) ### checar tambien esto
+            return redirect(url_for('login_all')) ### checar tambien esto
     return render_template('registro.html') ### Checar html si es el correcto
 
 def user_update():
@@ -49,15 +50,15 @@ def user_update():
 
             if success:
                 flash(message, 'success')
-                return redirect(url_for('profile'))  # checar esto
+                return redirect(url_for('user_profile'))  # checar esto
             else:
                 flash(message, 'error')
-                return redirect(url_for('update')) ### checar tambien esto
+                return redirect(url_for('user_update')) ### checar tambien esto
     
         return render_template('editar_perfil.html')  # checar esto
     else:
         flash('Primero debe de ingresar.', 'error')
-        return redirect(url_for('login'))
+        return redirect(url_for('login_all'))
 
 def user_profile():
     if 'loggedin' in session:
@@ -67,17 +68,17 @@ def user_profile():
 
         if not user_profile:
             flash("No se pudo cargar el perfil. Intenta nuevamente.", "error")
-            return redirect(url_for('logout')) 
+            return redirect(url_for('user_logout')) 
 
         return render_template('perfil.html', user=user_profile)  
     else:
         flash("Debes iniciar sesión para ver tu perfil.", "error")
-        return redirect(url_for('login'))  
+        return redirect(url_for('login_all'))  
     
 def user_logout():
     if 'loggedin' not in session:  
         flash('No hay sesión activa.', 'error')
-        return redirect(url_for('login')) 
+        return redirect(url_for('login_all')) 
     
     session.clear()  
     flash('Has cerrado sesión correctamente.', 'success')  
@@ -91,7 +92,7 @@ def user_delete_account():
 
             if not username or not password:
                 flash("Por favor, proporciona tu nombre de usuario y contraseña.", "error")
-                return redirect(url_for('deleteAccount'))
+                return redirect(url_for('user_delete_account'))
             
             hashed_password = hashlib.sha256(password.encode()).hexdigest()
             
@@ -99,7 +100,7 @@ def user_delete_account():
             
             if not user_id:
                 flash("Nombre de usuario o contraseña incorrectos, o el usuario no existe.", "error")
-                return redirect(url_for('deleteAccount'))
+                return redirect(url_for('user_delete_account'))
 
             success, message = delete_user_account(user_id)
             if success:
@@ -108,13 +109,13 @@ def user_delete_account():
                 return redirect(url_for('inicio'))  
             else:
                 flash(message, "error")
-                return redirect(url_for('deleteAccount')) 
+                return redirect(url_for('user_delete_account')) 
 
         return render_template('delete_account.html') 
 
     else:
         flash("Debes iniciar sesión para eliminar tu cuenta.", "error")
-        return redirect(url_for('login')) 
+        return redirect(url_for('login_all')) 
 
 def user_view_and_manage_cart():
     if 'loggedin' in session:
@@ -125,22 +126,22 @@ def user_view_and_manage_cart():
                 id_producto = request.form.get('id_producto')
                 success, message = remove_from_cart(id_usr, id_producto)
                 flash(message, "success" if success else "error")
-                return redirect(url_for('cart'))  
+                return redirect(url_for('user_view_and_manage_cart'))  
 
             if 'clear_cart' in request.form:
                 success, message = clear_cart(id_usr)
                 flash(message, "success" if success else "error")
-                return redirect(url_for('cart'))  
+                return redirect(url_for('user_view_and_manage_cart'))  
 
             if 'card_number' in request.form:
                 card_number = request.form.get('card_number')
                 if not card_number:
                     flash("Por favor, selecciona una tarjeta para confirmar la compra.", "error")
-                    return redirect(url_for('cart'))  
+                    return redirect(url_for('user_view_and_manage_cart'))  
 
                 success, message = confirm_purchase(id_usr, card_number)
                 flash(message, "success" if success else "error")
-                return redirect(url_for('profile'))  
+                return redirect(url_for('user_profile'))  
 
         cart_items = get_user_cart(id_usr)
         user_cards = get_user_cards(id_usr)
@@ -152,8 +153,7 @@ def user_view_and_manage_cart():
 
     else:
         flash("Debes iniciar sesión para modificar tu carrito.", "error")
-        return redirect(url_for('login'))  # Si no está logueado, redirige al login
-
+        return redirect(url_for('login_all'))  
 
 
 def user_view_product(id_producto):
@@ -184,7 +184,7 @@ def user_view_product(id_producto):
                 success, message = submit_rating(id_usr, id_producto, calificacion, comentario)
                 flash(message, "success" if success else "error")
 
-            return redirect(url_for('product', id_producto=id_producto))
+            return redirect(url_for('user_view_product', id_producto=id_producto))
 
         wishlist_status = get_wishlist_status(id_usr, id_producto)
         tarjetas = get_user_cards(id_usr)
@@ -212,14 +212,14 @@ def user_view_products_by_category(id_categoria):
 
     if not categoria:
         flash("Categoría no encontrada.", "error")
-        return redirect(url_for('products')) 
+        return redirect(url_for('user_view_all_products')) 
     
     return render_template('productos_categoria.html', productos=productos, categoria=categoria)
 
 def user_order_history():
     if 'loggedin' not in session: 
         flash("Debes iniciar sesión para ver tu historial de pedidos.", "error")
-        return redirect(url_for('login'))  
+        return redirect(url_for('login_all'))  
 
     id_usr = session['id_usr']  
 
@@ -228,7 +228,7 @@ def user_order_history():
             id_pedido = request.form.get('id_pedido')
             success, message = cancel_order(id_pedido)
             flash(message, "success" if success else "error")
-            return redirect(url_for('orderHistory')) 
+            return redirect(url_for('user_order_history')) 
 
     orders = usr_order_history(id_usr)
 
@@ -240,7 +240,7 @@ def user_order_history():
 def user_view_wishlist():
     if 'loggedin' not in session:  
         flash("Debes iniciar sesión para ver tu lista de deseos.", "error")
-        return redirect(url_for('login')) 
+        return redirect(url_for('login_all')) 
 
     id_usr = session['id_usr']  
 
@@ -254,7 +254,7 @@ def user_view_wishlist():
 def user_view_credit_cards():
     if 'loggedin' not in session:  
         flash("Debes iniciar sesión para ver tus tarjetas.", "error")
-        return redirect(url_for('login'))  
+        return redirect(url_for('login_all'))  
 
     id_usr = session['id_usr'] 
 
@@ -268,7 +268,7 @@ def user_view_credit_cards():
 def user_manage_credit_cards():
     if 'loggedin' not in session:  
         flash("Debes iniciar sesión para gestionar tus tarjetas.", "error")
-        return redirect(url_for('login'))  
+        return redirect(url_for('login_all'))  
 
     id_usr = session['id_usr'] 
 
@@ -317,4 +317,4 @@ def user_view_recommendations():
         return render_template('recommendations.html', recommended_products=recommended_products)
     else:
         flash("Inicia sesión para ver tus recomendaciones personalizadas.", "warning")
-        return redirect(url_for('products'))  
+        return redirect(url_for('user_view_all_products'))  
