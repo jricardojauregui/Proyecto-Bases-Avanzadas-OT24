@@ -3,14 +3,14 @@ from models.admin import get_promedio_calificacion_productos, get_cantidad_categ
 from models.usuario import login_user, get_all_products
 import hashlib
 
-def admin_login():
+def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('clave')
 
         if not username or not password:
             flash('Por favor, ingresa usuario y contraseña.', 'error')
-            return redirect(url_for('adminLogin'))
+            return redirect(url_for('login'))
 
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         user = login_user(username, hashed_password)
@@ -20,20 +20,21 @@ def admin_login():
             session['id_usr'] = user['id_usr']
             session['username'] = user['username']
 
-            if is_admin(user['id_usr']):
+            if is_admin(user['id_usr']):  
                 session['is_admin'] = True
                 flash('Acceso como administrador exitoso', 'success')
-                return redirect(url_for('dashboard')) 
+                return redirect(url_for('dashboard'))  
             else:
                 session['is_admin'] = False
-                flash('No tienes acceso como administrador.', 'error')
-                return redirect(url_for('inicio')) 
+                flash('Acceso como usuario exitoso', 'success')
+                return redirect(url_for('inicio'))  
 
         else:
-            flash('Credenciales incorrectas.', 'error')
-            return redirect(url_for('adminLogin'))
+            flash('Usuario o contraseña incorrectos, intenta nuevamente.', 'error')
+            return redirect(url_for('login'))
 
-    return render_template('admin_login.html')
+    return render_template('login.html') 
+
 
 
 

@@ -1,29 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from models.usuario import login_user, register_user, update_user, get_user_profile, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category, get_all_products, get_products_by_category, add_credit_card, remove_credit_card, validate_user_credentials, get_most_requested_products, get_newest_products, get_products_on_promotion, get_recommended_products
+from models.usuario import register_user, update_user, get_user_profile, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category, get_all_products, get_products_by_category, add_credit_card, remove_credit_card, validate_user_credentials, get_most_requested_products, get_newest_products, get_products_on_promotion, get_recommended_products
 import hashlib
-
-def user_login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['clave']
-
-        if not username or not password:
-            flash('Por favor, ingresa usuario y contraseña.', 'error')
-            return redirect(url_for('login'))
-
-        hashed_password = hashlib.sha256(password.encode()).hexdigest()
-        
-        user = login_user(username, hashed_password)
-
-        if user:
-            session['loggedin'] = True
-            session['usuario'] = user['username']  
-            flash('Acceso exitoso', 'success')
-            return redirect(url_for('inicio')) ### checar esto
-        else:
-            flash('Usuario o contraseña incorrectos, intenta nuevamente.', 'error')
-    
-    return render_template('login.html') ### checar html
 
 def user_register():
     if request.method == 'POST':
