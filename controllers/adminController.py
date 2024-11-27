@@ -10,7 +10,7 @@ def admin_login():
 
         if not username or not password:
             flash('Por favor, ingresa usuario y contraseña.', 'error')
-            return redirect(url_for('admin_login'))
+            return redirect(url_for('adminLogin'))
 
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         user = login_user(username, hashed_password)
@@ -31,7 +31,7 @@ def admin_login():
 
         else:
             flash('Credenciales incorrectas.', 'error')
-            return redirect(url_for('admin_login'))
+            return redirect(url_for('adminLogin'))
 
     return render_template('admin_login.html')
 

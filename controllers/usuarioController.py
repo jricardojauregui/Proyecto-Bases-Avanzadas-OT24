@@ -114,7 +114,7 @@ def user_delete_account():
 
             if not username or not password:
                 flash("Por favor, proporciona tu nombre de usuario y contraseña.", "error")
-                return redirect(url_for('delete_account'))
+                return redirect(url_for('deleteAccount'))
             
             hashed_password = hashlib.sha256(password.encode()).hexdigest()
             
@@ -340,4 +340,4 @@ def user_view_recommendations():
         return render_template('recommendations.html', recommended_products=recommended_products)
     else:
         flash("Inicia sesión para ver tus recomendaciones personalizadas.", "warning")
-        return redirect(url_for('user_view_products'))  
+        return redirect(url_for('products'))  
