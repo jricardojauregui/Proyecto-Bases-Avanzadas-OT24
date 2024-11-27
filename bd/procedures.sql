@@ -980,3 +980,48 @@ BEGIN
     SELECT p.foto_producto, p.nom_producto, p.precio FROM productos p INNER JOIN productos_categorias pc ON p.id_producto = pc.id_producto WHERE pc.id_categoria = p_id_categoria ORDER BY p.fecha_agregacion DESC LIMIT 5;
 END //
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE MostrarTodosDescuentos()
+BEGIN
+    SELECT 
+        id_promocion, 
+        nom_promocion, 
+        descuento, 
+        fecha_inicio, 
+        fecha_fin, 
+        activo 
+    FROM 
+        promociones;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE ActualizarCampoDescuento(
+    IN p_id_promocion INT,
+    IN p_campo VARCHAR(50),
+    IN p_valor TEXT
+)
+BEGIN
+    SET @sql = CONCAT('UPDATE promociones SET ', p_campo, ' = ? WHERE id_promocion = ?');
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt USING p_valor, p_id_promocion;
+    DEALLOCATE PREPARE stmt;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE EliminarDescuento(
+    IN p_id_promocion INT
+)
+BEGIN
+    DELETE FROM promociones WHERE id_promocion = p_id_promocion;
+END //
+
+DELIMITER ;
+

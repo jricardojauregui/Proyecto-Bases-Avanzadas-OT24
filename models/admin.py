@@ -184,3 +184,51 @@ def delete_order_by_id(id_pedido):
     finally:
         cur.close()
 
+def update_product_field(id_producto, field, value):
+    cur = mysql.connection.cursor()
+    try:
+        cur.callproc('ActualizarCampoProducto', [id_producto, field, value])
+        mysql.connection.commit()
+        return True, "Campo del producto actualizado correctamente."
+    except MySQLdb.Error as e:
+        print(f"Error al actualizar el campo del producto: {e}")
+        return False, str(e)
+    finally:
+        cur.close()
+
+def get_all_discounts():
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cur.callproc('MostrarTodosDescuentos')  
+        discounts = cur.fetchall()
+        return discounts
+    except MySQLdb.Error as e:
+        print(f"Error al obtener descuentos: {e}")
+        return []
+    finally:
+        cur.close()
+
+def update_discount_field(id_promocion, field, value):
+    cur = mysql.connection.cursor()
+    try:
+        cur.callproc('ActualizarCampoDescuento', [id_promocion, field, value])  
+        mysql.connection.commit()
+        return True, "Campo de descuento actualizado correctamente."
+    except MySQLdb.Error as e:
+        print(f"Error al actualizar campo del descuento: {e}")
+        return False, str(e)
+    finally:
+        cur.close()
+
+def delete_discount_by_id(id_promocion):
+    cur = mysql.connection.cursor()
+    try:
+        cur.callproc('EliminarDescuento', [id_promocion])  
+        mysql.connection.commit()
+        return True, "Descuento eliminado correctamente."
+    except MySQLdb.Error as e:
+        print(f"Error al eliminar descuento: {e}")
+        return False, str(e)
+    finally:
+        cur.close()
+

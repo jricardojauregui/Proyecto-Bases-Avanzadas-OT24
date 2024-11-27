@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
-from models.admin import get_promedio_calificacion_productos, get_cantidad_categorias_productos, get_cantidad_stock_productos, get_pedidos_por_mes, get_usuarios_por_mes, get_productos_estado, get_ganancias_por_mes, is_admin, update_user_field, get_all_users, delete_user_by_id, delete_product_by_id, update_order_status, delete_order_by_id, get_all_orders
+from models.admin import get_promedio_calificacion_productos, get_cantidad_categorias_productos, get_cantidad_stock_productos, get_pedidos_por_mes, get_usuarios_por_mes, get_productos_estado, get_ganancias_por_mes, is_admin, update_user_field, update_product_field, get_all_users, delete_user_by_id, delete_product_by_id, update_order_status, delete_order_by_id, get_all_orders, update_discount_field, delete_discount_by_id, get_all_discounts
 from models.usuario import login_user, get_all_products
 import hashlib
 
@@ -102,6 +102,21 @@ def admin_manage_users():
 def admin_manage_products():
     if 'loggedin' in session and session.get('is_admin'):
         if request.method == 'POST':
+            if 'field' in request.form:
+                id_producto = request.form.get('id_producto')
+                field = request.form.get('field')
+                value = request.form.get('value')
+
+                if not id_producto or not field or value is None:
+                    return jsonify({"success": False, "message": "Datos incompletos."})
+                
+                allowed_fields = ['nom_producto', 'desc_producto', 'precio', 'empresa_nom']
+                if field not in allowed_fields:
+                    return jsonify({"success": False, "message": "Campo no permitido para actualizar."})
+
+                success, message = update_product_field(id_producto, field, value)
+                return jsonify({"success": success, "message": message})
+
             if 'delete_product' in request.form:
                 id_producto = request.form.get('delete_product')
 
@@ -145,6 +160,35 @@ def admin_manage_orders():
     else:
         flash('Debes iniciar sesión como administrador para acceder a esta página.', 'error')
         return redirect(url_for('adminLogin'))
+
+def admin_manage_discounts():
+    if 'loggedin' in session and session.get('is_admin'):
+        if request.method == 'POST':
+            if 'field' in request.form:
+                id_promocion = request.form.get('id_promocion')
+                field = request.form.get('field')
+                value = request.form.get('value')
+
+                if not id_promocion or not field or value is None:
+                    return jsonify({"success": False, "message": "Datos incompletos."})
+
+                success, message = update_discount_field(id_promocion, field, value)
+                return jsonify({"success": success, "message": message})
+
+            if 'delete_discount' in request.form:
+                id_promocion = request.form.get('delete_discount')
+
+                if not id_promocion:
+                    return jsonify({"success": False, "message": "No se especificó el descuento a eliminar."})
+
+                success, message = delete_discount_by_id(id_promocion)
+                return jsonify({"success": success, "message": message})
+
+        discounts = get_all_discounts()
+        return render_template('manage_discounts.html', discounts=discounts)
+    else:
+        flash('Debes iniciar sesión como administrador para acceder a esta página.', 'error')
+        return redirect(url_for('admin_login'))
 
 
 def promedio_calificacion_productos():
