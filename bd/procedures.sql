@@ -687,14 +687,14 @@ BEGIN
     DECLARE existe INT;
 
     SELECT COUNT(*) INTO existe
-    FROM wishlist
-    WHERE id_usuario = id_usr AND id_producto = id_producto;
+    FROM wish_list
+    WHERE id_usr = id_usr AND id_producto = id_producto;
 
     IF existe > 0 THEN
-        DELETE FROM wishlist
-        WHERE id_usuario = id_usr AND id_producto = id_producto;
+        DELETE FROM wish_list
+        WHERE id_usr = id_usr AND id_producto = id_producto;
     ELSE
-        INSERT INTO wishlist (id_usuario, id_producto)
+        INSERT INTO wish_list (id_usr, id_producto)
         VALUES (id_usr, id_producto);
     END IF;
 END //
