@@ -2,8 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
 from database import mysql, init_app
 
-from controllers.adminController import admin_login, admin_logout, admin_manage_products, admin_manage_users, admin_manage_orders, admin_view_dash, promedio_calificacion_productos, cantidad_categorias_productos, cantidad_stock_productos, pedidos_por_mes, usuarios_por_mes, productos_entregados, productos_cancelados, productos_en_proceso, ganancias_por_mes
-from controllers.usuarioController import user_login, user_register, user_update, user_logout, user_delete_account, user_profile, user_view_and_manage_cart, user_order_history, user_view_wishlist, user_view_product, user_view_all_products, user_view_products_by_category, user_view_credit_cards, user_manage_credit_cards, user_view_products_with_discount, user_view_most_requested_products, user_view_newest_products, user_view_recommendations
+from controllers.adminController import login_all, admin_logout, admin_manage_products, admin_manage_users, admin_manage_orders, admin_view_dash, promedio_calificacion_productos, cantidad_categorias_productos, cantidad_stock_productos, pedidos_por_mes, usuarios_por_mes, productos_entregados, productos_cancelados, productos_en_proceso, ganancias_por_mes
+from controllers.usuarioController import user_register, user_update, user_logout, user_delete_account, user_profile, user_view_and_manage_cart, user_order_history, user_view_wishlist, user_view_product, user_view_all_products, user_view_products_by_category, user_view_credit_cards, user_manage_credit_cards, user_view_products_with_discount, user_view_most_requested_products, user_view_newest_products, user_view_recommendations
 app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = MYSQL_HOST
@@ -20,7 +20,6 @@ def inicio():
     return render_template('inicio.html') ### checar html
 
 ### RUTAS ADMIN
-app.add_url_rule('/adminLogin', view_func=admin_login, methods=['GET', 'POST'])
 app.add_url_rule('/adminLogout', view_func=admin_logout)
 app.add_url_rule('/manageProducts', view_func=admin_manage_products, methods=['GET', 'POST'])
 app.add_url_rule('/manageUsers', view_func=admin_manage_users, methods=['GET', 'POST'])
@@ -41,7 +40,7 @@ app.add_url_rule('/data/productos_cancelados', view_func=productos_cancelados, m
 app.add_url_rule('/data/ganancias_por_mes', view_func=ganancias_por_mes, methods=['GET'])
 
 ### RUTAS USUARIO
-app.add_url_rule('/login', view_func=user_login, methods=['GET', 'POST'])
+app.add_url_rule('/login', view_func=login_all, methods=['GET', 'POST'])
 app.add_url_rule('/register', view_func=user_register, methods=['GET', 'POST'])
 app.add_url_rule('/update', view_func=user_update, methods=['GET', 'POST'])
 app.add_url_rule('/creditCards', view_func=user_view_credit_cards, methods=['GET'])

@@ -3,7 +3,7 @@ from models.admin import get_promedio_calificacion_productos, get_cantidad_categ
 from models.usuario import login_user, get_all_products
 import hashlib
 
-def login():
+def login_all():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('clave')
