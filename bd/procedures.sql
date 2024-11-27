@@ -1025,3 +1025,33 @@ END //
 
 DELIMITER ;
 
+DELIMITER //
+
+CREATE PROCEDURE BarraDeBusqueda(
+    IN p_busqueda VARCHAR(255)
+)
+BEGIN
+    SELECT 
+        p.id_producto,
+        p.nom_producto,
+        p.desc_producto,
+        p.precio,
+        c.categoria,
+        p.empresa_nom,
+        p.foto_producto
+    FROM 
+        productos p
+    LEFT JOIN 
+        productos_categorias pc ON p.id_producto = pc.id_producto
+    LEFT JOIN 
+        categorias c ON pc.id_categoria = c.id_categoria
+    WHERE 
+        p.nom_producto LIKE CONCAT('%', p_busqueda, '%') OR
+        p.desc_producto LIKE CONCAT('%', p_busqueda, '%') OR
+        c.categoria LIKE CONCAT('%', p_busqueda, '%') OR
+        p.empresa_nom LIKE CONCAT('%', p_busqueda, '%')
+    ORDER BY 
+        p.nom_producto ASC;
+END //
+
+DELIMITER ;
