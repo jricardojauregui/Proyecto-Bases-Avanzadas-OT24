@@ -184,6 +184,15 @@ def productos_estado(estado):
         return jsonify([{"total": resultado[0]}])
     else:
         return jsonify({"error": "Acceso no autorizado"}), 403
+    
+def productos_entregados():
+    return productos_estado('completados')
+
+def productos_en_proceso():
+    return productos_estado('en_proceso')
+
+def productos_cancelados():
+    return productos_estado('cancelados')
 
 
 def ganancias_por_mes():

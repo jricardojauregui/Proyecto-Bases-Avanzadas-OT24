@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
 from database import mysql, init_app
 
-from controllers.adminController import admin_login, admin_logout, admin_manage_products, admin_manage_users, admin_manage_orders, admin_view_dash, promedio_calificacion_productos, cantidad_categorias_productos, cantidad_stock_productos, pedidos_por_mes, usuarios_por_mes, productos_estado, ganancias_por_mes
+from controllers.adminController import admin_login, admin_logout, admin_manage_products, admin_manage_users, admin_manage_orders, admin_view_dash, promedio_calificacion_productos, cantidad_categorias_productos, cantidad_stock_productos, pedidos_por_mes, usuarios_por_mes, productos_entregados, productos_cancelados, productos_en_proceso, ganancias_por_mes
 from controllers.usuarioController import user_login, user_register, user_update, user_logout, user_delete_account, user_profile, user_view_and_manage_cart, user_order_history, user_view_wishlist, user_view_product, user_view_all_products, user_view_products_by_category, user_view_credit_cards, user_manage_credit_cards, user_view_products_with_discount, user_view_most_requested_products, user_view_newest_products, user_view_recommendations
 app = Flask(__name__)
 
@@ -35,9 +35,9 @@ app.add_url_rule('/data/Cantidad_categorias_Productos', view_func=cantidad_categ
 app.add_url_rule('/data/Cantidad_stock_Productos', view_func=cantidad_stock_productos, methods=['GET'])
 app.add_url_rule('/data/pedidos_por_mes', view_func=pedidos_por_mes, methods=['GET'])
 app.add_url_rule('/data/usuarios_por_mes', view_func=usuarios_por_mes, methods=['GET'])
-app.add_url_rule('/data/productos_entregados', view_func=lambda: productos_estado('completados'), methods=['GET'])
-app.add_url_rule('/data/productos_EnProceso', view_func=lambda: productos_estado('en_proceso'), methods=['GET'])
-app.add_url_rule('/data/productos_cancelados', view_func=lambda: productos_estado('cancelados'), methods=['GET'])
+app.add_url_rule('/data/productos_entregados', view_func=productos_entregados, methods=['GET'])
+app.add_url_rule('/data/productos_EnProceso', view_func=productos_en_proceso, methods=['GET'])
+app.add_url_rule('/data/productos_cancelados', view_func=productos_cancelados, methods=['GET'])
 app.add_url_rule('/data/ganancias_por_mes', view_func=ganancias_por_mes, methods=['GET'])
 
 ### RUTAS USUARIO
