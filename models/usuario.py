@@ -385,3 +385,14 @@ def get_newest_products():
         return []
     finally:
         cur.close()
+
+def get_recommended_products(id_usr):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cur.callproc('sistemaRecomendaciones', [id_usr]) 
+        return cur.fetchall()
+    except MySQLdb.Error as e:
+        print(f"Error al obtener recomendaciones personalizadas: {e}")
+        return []
+    finally:
+        cur.close()

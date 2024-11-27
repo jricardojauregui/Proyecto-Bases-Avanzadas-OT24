@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from models.usuario import login_user, register_user, update_user, get_user_profile, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category, get_all_products, get_products_by_category, add_credit_card, remove_credit_card, validate_user_credentials, get_most_requested_products, get_newest_products, get_products_on_promotion
+from models.usuario import login_user, register_user, update_user, get_user_profile, confirm_purchase, get_user_cart, add_to_cart, cancel_order, usr_order_history, remove_from_cart, clear_cart, get_user_cards, get_wishlist, delete_user_account, get_product_info, toggle_wishlist, get_wishlist_status, direct_purchase, get_product_ratings, submit_rating, get_last_purchase_date, get_product_category, get_all_products, get_products_by_category, add_credit_card, remove_credit_card, validate_user_credentials, get_most_requested_products, get_newest_products, get_products_on_promotion, get_recommended_products
 import hashlib
 
 def user_login():
@@ -332,3 +332,12 @@ def user_view_most_requested_products():
 def user_view_newest_products():
     products = get_newest_products()
     return render_template('newest_products.html', products=products)
+
+def user_view_recommendations():
+    if 'loggedin' in session:  
+        id_usr = session['id_usr']
+        recommended_products = get_recommended_products(id_usr) 
+        return render_template('recommendations.html', recommended_products=recommended_products)
+    else:
+        flash("Inicia sesión para ver tus recomendaciones personalizadas.", "warning")
+        return redirect(url_for('user_view_products'))  

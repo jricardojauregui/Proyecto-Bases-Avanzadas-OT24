@@ -965,3 +965,15 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE sistemaRecomendaciones(
+    IN p_id_usr INT
+)
+BEGIN
+    DECLARE p_id_categoria INT;
+    SELECT pc.id_categoria INTO p_id_categoria FROM detalle_pedidos dp INNER JOIN productos p ON dp.id_producto = p.id_producto INNER JOIN productos_categorias pc ON p.id_producto = pc.id_producto WHERE dp.id_pedido IN (SELECT id_pedido FROM pedidos WHERE id_usr = p_id_usr) GROUP BY pc.id_categoria ORDER BY COUNT(*) DESC LIMIT 1;
+
+    SELECT p.foto_producto, p.nom_producto, p.precio FROM productos p INNER JOIN productos_categorias pc ON p.id_producto = pc.id_producto WHERE pc.id_categoria = p_id_categoria ORDER BY p.fecha_agregacion DESC LIMIT 5;
+END //
+DELIMITER ;
