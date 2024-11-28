@@ -98,6 +98,37 @@ def admin_manage_users():
         return redirect(url_for('login_all'))
 
 
+from flask import render_template, request, redirect, url_for, session
+from app import app
+from models import insert_user  # Asegúrate de que la función insert_user esté importada correctamente
+
+def admin_insert_user():
+    if 'loggedin' in session and session.get('is_admin'): 
+        if request.method == 'POST':
+            username = request.form.get('username')
+            clave = request.form.get('clave')
+            nom_usr = request.form.get('nom_usr')
+            apellido_usr = request.form.get('apellido_usr')
+            correo_usr = request.form.get('correo_usr')
+            tel_usr = request.form.get('tel_usr')
+            tel_domicilio = request.form.get('tel_domicilio')
+            direccion = request.form.get('direccion')
+            foto_usuario = request.form.get('foto_usuario', '')  # Foto de usuario (si existe)
+            
+            if not foto_usuario:
+                foto_usuario = ''
+
+            success, message = insert_user(username, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario)
+
+            if success:
+                return redirect(url_for('admin_manage_users'))
+            else:
+                return render_template('admin_insert_user.html', error=message)
+
+        return render_template('admin_insert_user.html')
+
+    return redirect(url_for('login')) 
+
 def admin_manage_products():
     if 'loggedin' in session and session.get('is_admin'):
         if request.method == 'POST':

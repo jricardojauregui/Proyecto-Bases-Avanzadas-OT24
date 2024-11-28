@@ -105,10 +105,10 @@ def get_all_users():
     try:
         cur.callproc('MostrarTodosUsuarios')
         users = cur.fetchall()
-        return users
+        return users if users else [] 
     except MySQLdb.Error as e:
         print(f"Error al obtener usuarios: {e}")
-        return None
+        return []
     finally:
         cur.close()
 
@@ -232,3 +232,15 @@ def delete_discount_by_id(id_promocion):
     finally:
         cur.close()
 
+def insert_user(username, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cur.callproc('InsertUsuario', (username, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel_domicilio, direccion, foto_usuario))
+        mysql.connection.commit()  
+
+        return True, "Usuario insertado correctamente."
+    except MySQLdb.Error as e:
+        print(f"Error al insertar usuario: {e}")
+        return False, "Error al insertar el usuario."
+    finally:
+        cur.close()

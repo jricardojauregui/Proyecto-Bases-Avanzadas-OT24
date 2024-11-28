@@ -932,6 +932,22 @@ DELIMITER ;
 
 DELIMITER //
 
+CREATE PROCEDURE ActualizarCampoProducto(
+    IN p_id_producto INT,
+    IN p_campo VARCHAR(100),
+    IN p_valor TEXT
+)
+BEGIN
+    SET @query = CONCAT('UPDATE productos SET ', p_campo, ' = ? WHERE id_producto = ?');
+    PREPARE stmt FROM @query;
+    EXECUTE stmt USING p_valor, p_id_producto;
+    DEALLOCATE PREPARE stmt;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
 CREATE PROCEDURE MostrarTodasOrdenes()
 BEGIN
     SELECT 
@@ -1052,6 +1068,38 @@ BEGIN
         p.empresa_nom LIKE CONCAT('%', p_busqueda, '%')
     ORDER BY 
         p.nom_producto ASC;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE autocompletar(
+    IN p_busqueda VARCHAR(255)
+)
+BEGIN
+    SELECT 
+        p.id_producto,
+        p.nom_producto,
+        p.desc_producto,
+        p.precio,
+        c.categoria,
+        p.empresa_nom,
+        p.foto_producto
+    FROM 
+        productos p
+    LEFT JOIN 
+        productos_categorias pc ON p.id_producto = pc.id_producto
+    LEFT JOIN 
+        categorias c ON pc.id_categoria = c.id_categoria
+    WHERE 
+        p.nom_producto LIKE CONCAT('%', p_busqueda, '%') OR
+        p.desc_producto LIKE CONCAT('%', p_busqueda, '%') OR
+        c.categoria LIKE CONCAT('%', p_busqueda, '%') OR
+        p.empresa_nom LIKE CONCAT('%', p_busqueda, '%')
+    ORDER BY 
+        p.nom_producto ASC
+    LIMIT 10; 
 END //
 
 DELIMITER ;

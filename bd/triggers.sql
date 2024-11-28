@@ -169,4 +169,81 @@ BEGIN
 END //
 DELIMITER ;
 
+DELIMITER //
 
+CREATE TRIGGER before_user_delete
+BEFORE DELETE ON usuarios
+FOR EACH ROW
+BEGIN
+    DECLARE pedidos_en_proceso INT;
+
+    SELECT COUNT(*) INTO pedidos_en_proceso
+    FROM pedidos
+    WHERE id_usr = OLD.id_usr AND estado_pedido = 'En proceso';
+
+    IF pedidos_en_proceso > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No se puede borrar al usuario porque tiene pedidos en proceso.';
+    ELSE
+        DELETE FROM carrito_compras WHERE id_usr = OLD.id_usr;
+        DELETE FROM wish_list WHERE id_usr = OLD.id_usr;
+        DELETE FROM calificaciones WHERE id_usr = OLD.id_usr;
+        DELETE FROM tarjetas WHERE id_usr = OLD.id_usr;
+        DELETE FROM historial_compras WHERE id_usr = OLD.id_usr;
+        DELETE FROM usuarios_roles WHERE id_usr = OLD.id_usr;
+
+        DELETE FROM detalle_pedidos WHERE id_pedido IN (SELECT id_pedido FROM pedidos WHERE id_usr = OLD.id_usr);
+        DELETE FROM pedidos WHERE id_usr = OLD.id_usr;
+    END IF;
+END;
+//
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE TRIGGER before_product_delete
+BEFORE DELETE ON productos
+FOR EACH ROW
+BEGIN
+    DECLARE pedidos_en_proceso INT;
+
+    SELECT COUNT(*) INTO pedidos_en_proceso
+    FROM detalle_pedidos dp
+    INNER JOIN pedidos p ON dp.id_pedido = p.id_pedido
+    WHERE dp.id_producto = OLD.id_producto AND p.estado_pedido = 'En proceso';
+
+    IF pedidos_en_proceso > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No se puede borrar el producto porque está relacionado con pedidos en proceso.';
+    ELSE
+        DELETE FROM productos_categorias WHERE id_producto = OLD.id_producto;
+        DELETE FROM productos_promociones WHERE id_producto = OLD.id_producto;
+        DELETE FROM inventario WHERE id_producto = OLD.id_producto;
+        DELETE FROM carrito_compras WHERE id_producto = OLD.id_producto;
+        DELETE FROM wish_list WHERE id_producto = OLD.id_producto;
+        DELETE FROM calificaciones WHERE id_producto = OLD.id_producto;
+        DELETE FROM historial_compras WHERE id_producto = OLD.id_producto;
+
+        DELETE FROM detalle_pedidos WHERE id_producto = OLD.id_producto;
+    END IF;
+END;
+//
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE TRIGGER before_promotion_delete
+BEFORE DELETE ON promociones
+FOR EACH ROW
+BEGIN
+    DELETE FROM productos_promociones WHERE id_promocion = OLD.id_promocion;
+
+
+END;
+//
+
+DELIMITER ;
