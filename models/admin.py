@@ -244,3 +244,29 @@ def insert_user(username, clave, nom_usr, apellido_usr, correo_usr, tel_usr, tel
         return False, "Error al insertar el usuario."
     finally:
         cur.close()
+
+def insertar_producto(nom_producto, desc_producto, precio, empresa_nom, foto_producto):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cur.callproc('InsertarProducto', (nom_producto, desc_producto, precio, empresa_nom, foto_producto))
+        mysql.connection.commit()  
+
+        return True, "Producto insertado correctamente."
+    except MySQLdb.Error as e:
+        print(f"Error al insertar producto: {e}")
+        return False, "Error al insertar el producto."
+    finally:
+        cur.close()
+
+def insertar_promocion(nom_promocion, descuento, fecha_inicio, fecha_fin, activo):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cur.callproc('InsertarPromocion', (nom_promocion, descuento, fecha_inicio, fecha_fin, activo))
+        mysql.connection.commit()  
+
+        return True, "Promoción insertada correctamente."
+    except MySQLdb.Error as e:
+        print(f"Error al insertar promoción: {e}")
+        return False, "Error al insertar la promoción."
+    finally:
+        cur.close()
