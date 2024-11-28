@@ -113,7 +113,7 @@ def admin_insert_user():
             tel_usr = request.form.get('tel_usr')
             tel_domicilio = request.form.get('tel_domicilio')
             direccion = request.form.get('direccion')
-            foto_usuario = request.form.get('foto_usuario', '')  # Foto de usuario (si existe)
+            foto_usuario = request.form.get('foto_usuario', '')  
             
             if not foto_usuario:
                 foto_usuario = ''
